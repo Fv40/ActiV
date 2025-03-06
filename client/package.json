@@ -15,7 +15,9 @@
   },
   "dependencies": {
     "vue": "^3.5.13",
-    "vue-router": "^4.5.0"
+    "vue-router": "^4.5.0",
+    "bulma": "^1.0.3",
+    "@fortawesome/fontawesome-free": "^6.7.2"
   },
   "devDependencies": {
     "@playwright/test": "^1.50.1",
