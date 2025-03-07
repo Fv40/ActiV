@@ -24,7 +24,7 @@ const navbarBurgerActive = ref(false);
             <div class="navbar-menu" :class="{ 'is-active': navbarBurgerActive }">
                 <div class="navbar-start">
                     <RouterLink to="/my-activity" class="navbar-item pr-3 pl-4"><span class="icon"><i class="fa-solid fa-person"></i></span>My Activity</RouterLink>
-                    <RouterLink to="/" class="navbar-item pr-3"><span class="icon"><i class="fa-solid fa-people-group"></i></span>Friends' Activity</RouterLink>
+                    <RouterLink to="/friends-activity" class="navbar-item pr-3"><span class="icon"><i class="fa-solid fa-people-group"></i></span>Friends' Activity</RouterLink>
                     <RouterLink to="/" class="navbar-item pr-3"><span class="icon"><i class="fa-solid fa-chart-area"></i></span>Statistics</RouterLink>
                     <RouterLink to="/" class="navbar-item pr-3"><span class="icon"><i class="fa-solid fa-magnifying-glass"></i></span>Search</RouterLink>
                 </div>
