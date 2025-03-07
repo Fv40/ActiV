@@ -26,8 +26,8 @@ const workoutStats = ref({
 <template>
     <ul>
         <li v-for="item in workoutStats" :key="item.calories">
-            <div class="card column is-6 ml-6 mt-6">
-                <div class="card-content has-text-info">
+            <div class="card mt-6">
+                <div class="card-content has-text-info card-color=light">
                     <div> 
                         <h1 class="list-title">
                             <strong>{{ item.title }}</strong>
@@ -66,5 +66,9 @@ p {
     margin-bottom: 10px;
 }
 
-
+.card{
+    background-color: #28343b63;
+    border-radius: 10px;
+    box-shadow: 10 4px 8px 0 rgba(0,0,0,0.2);
+}
 </style>
