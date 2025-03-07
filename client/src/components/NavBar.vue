@@ -9,11 +9,12 @@ const navbarBurgerActive = ref(false);
     <nav class="navbar is-warning" role="navigation">
         <div class="container">
             <div class="navbar-brand">
-                <a class="navbar-item router-link-active router-link-exact-active" href="/">
+                <a class="navbar-item" href="/">
                     <img class="logo" src="@/assets/newlogo.svg" width="40">
                 </a>
                 
-                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" :class="{ 'is-active': isActive }" @click="isActive = !isActive">
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" :class="{ 'is-active': navbarBurgerActive }" @click="navbarBurgerActive = !navbarBurgerActive">
+                    <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
@@ -27,9 +28,8 @@ const navbarBurgerActive = ref(false);
                     <RouterLink to="/" class="navbar-item pr-3"><span class="icon"><i class="fa-solid fa-chart-area"></i></span>Statistics</RouterLink>
                     <RouterLink to="/" class="navbar-item pr-3"><span class="icon"><i class="fa-solid fa-magnifying-glass"></i></span>Search</RouterLink>
                 </div>
-            </div>
 
-            <div class="navbar-end">
+                <div class="navbar-end">
                 <div class="navbar-item">
                     <div class="buttons">
                         <a class="button is-link">
@@ -37,6 +37,7 @@ const navbarBurgerActive = ref(false);
                         </a>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </nav>
