@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router';
+import { getUsers } from '@/models/users'
 
 const navbarBurgerActive = ref(false);
+const isLoggedIn = ref(false);
 </script>
 
 <template>
