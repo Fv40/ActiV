@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router';
-import { getUsers } from '@/models/users'
+import { getUsers, selectUser, currentUser } from '@/models/users'
 
-const navbarBurgerActive = ref(false);
-const isLoggedIn = ref(false);
+const users = getUsers()
+const navbarBurgerActive = ref(false)
+const loginDropdownActive = ref(false)
 </script>
 
 <template>
@@ -33,9 +34,25 @@ const isLoggedIn = ref(false);
 
                 <div class="navbar-end">
                 <div class="navbar-item">
-                    <div class="buttons">
-                        <a class="button is-link">
-                            <span><i class="fa-regular fa-user pr-2"></i></span> Log in
+                    <div v-if="currentUser">
+                            <span>
+                                <span><i class="fa-solid fa-user pr-2"></i></span> {{ currentUser.name }}
+                                <button class="pl-2" @click="selectUser(null)"><u>Log out</u></button>
+                            </span>
+                        </div>
+                    <div v-else class="buttons">
+                        <a class="button is-link dropdown" :class="{ 'is-active': loginDropdownActive }" @click="loginDropdownActive = !loginDropdownActive">
+                            <div class="dropdown-trigger">
+                                <span><i class="fa-regular fa-user pr-2"></i></span> Log in
+                                <span class="pl-2"><i class="fas fa-angle-down"></i></span>
+                            </div>
+                            <div class="dropdown-menu" role="menu">
+                                <div class="dropdown-content">
+                                    <a v-for="user in users" :key="user.id" class="dropdown-item" @click="selectUser(user), console.log(currentUser.name)">
+                                        {{ user.name }}
+                                    </a>
+                                </div>
+                            </div>
                         </a>
                     </div>
                 </div>
