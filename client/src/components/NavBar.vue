@@ -1,11 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { getUsers, selectUser, currentUser } from '@/models/users'
 
 const users = getUsers()
 const navbarBurgerActive = ref(false)
 const loginDropdownActive = ref(false)
+
+const activityLink = computed(() => {
+  if (currentUser.value) {
+    return `/activity/${currentUser.value.id}`
+  } else {
+    return '/logged-out'
+  }
+})
 </script>
 
 <template>
@@ -33,10 +41,10 @@ const loginDropdownActive = ref(false)
 
       <div class="navbar-menu" :class="{ 'is-active': navbarBurgerActive }">
         <div class="navbar-start">
-          <RouterLink to="/my-activity" class="navbar-item pr-3 pl-4"
+          <RouterLink :to="activityLink" class="navbar-item pr-3 pl-4 router-link-active router-link-exact-active"
             ><span class="icon"><i class="fa-solid fa-person"></i></span>My Activity</RouterLink
           >
-          <RouterLink to="/" class="navbar-item pr-3"
+          <RouterLink to="/activity/-1" class="navbar-item pr-3"
             ><span class="icon"><i class="fa-solid fa-people-group"></i></span>Friends'
             Activity</RouterLink
           >
@@ -73,7 +81,7 @@ const loginDropdownActive = ref(false)
                       v-for="user in users"
                       :key="user.id"
                       class="dropdown-item"
-                      @click="(selectUser(user), console.log(currentUser.name))"
+                      @click="(selectUser(user))"
                     >
                       {{ user.name }}
                     </a>
