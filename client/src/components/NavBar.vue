@@ -1,20 +1,41 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { ref, computed } from 'vue'
+import { RouterLink, useRouter } from 'vue-router'
 import { getUsers, selectUser, currentUser } from '@/models/users'
 
 const users = getUsers()
+const router = useRouter()
 const navbarBurgerActive = ref(false)
 const loginDropdownActive = ref(false)
+
+const activityLink = computed(() => {
+  if (currentUser.value) {
+    return `/my-activity`
+  } else {
+    return '/logged-out'
+  }
+})
+
+function logout() {
+  router.push('/logged-out')
+  selectUser(null)
+}
+
+function login(user) {
+  selectUser(user)
+  router.push('/')
+}
 </script>
 
 <template>
   <nav class="navbar is-warning" role="navigation">
     <div class="container">
       <div class="navbar-brand">
-        <a class="navbar-item" href="/">
-          <img class="logo" src="@/assets/newlogo.svg" width="40" />
-        </a>
+        <RouterLink
+            to="/"
+            class="navbar-item pr-3 pl-4 router-link-active router-link-exact-active"
+            ><img class="logo" src="@/assets/newlogo.svg" width="40" /></RouterLink
+          >
 
         <a
           role="button"
@@ -33,10 +54,12 @@ const loginDropdownActive = ref(false)
 
       <div class="navbar-menu" :class="{ 'is-active': navbarBurgerActive }">
         <div class="navbar-start">
-          <RouterLink to="/my-activity" class="navbar-item pr-3 pl-4"
+          <RouterLink
+            :to="activityLink"
+            class="navbar-item pr-3 pl-4 router-link-active router-link-exact-active"
             ><span class="icon"><i class="fa-solid fa-person"></i></span>My Activity</RouterLink
           >
-          <RouterLink to="/" class="navbar-item pr-3"
+          <RouterLink to="/friends-activity" class="navbar-item pr-3"
             ><span class="icon"><i class="fa-solid fa-people-group"></i></span>Friends'
             Activity</RouterLink
           >
@@ -54,7 +77,9 @@ const loginDropdownActive = ref(false)
             <div v-if="currentUser">
               <span>
                 <span><i class="fa-solid fa-user pr-2"></i></span> {{ currentUser.name }}
-                <button class="pl-2" @click="selectUser(null)"><u>Log out</u></button>
+                <button class="pl-2" @click="logout">
+                  <u>Log out</u>
+                </button>
               </span>
             </div>
             <div v-else class="buttons">
@@ -73,7 +98,7 @@ const loginDropdownActive = ref(false)
                       v-for="user in users"
                       :key="user.id"
                       class="dropdown-item"
-                      @click="(selectUser(user), console.log(currentUser.name))"
+                      @click="login(user)"
                     >
                       {{ user.name }}
                     </a>

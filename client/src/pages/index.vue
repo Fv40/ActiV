@@ -1,10 +1,16 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import InfoBox from '@/components/InfoBox.vue'
 import NotificationList from '@/components/NotificationList.vue'
+import { currentUser } from '@/models/users'
+
+const router = useRouter()
+
+
 </script>
 
 <template>
-  <div class="home">
+  <div v-if="currentUser" class="home">
     <div class="container">
       <div class="columns is-centered is-paddingless">
         <div class="column is-half">
@@ -17,6 +23,9 @@ import NotificationList from '@/components/NotificationList.vue'
         </div>
       </div>
     </div>
+  </div>
+  <div v-else>
+    {{ router.push('/logged-out') }}
   </div>
 </template>
 
