@@ -11,7 +11,7 @@ const props = defineProps<{
 
 const timeDifference = computed(() => {
   const now = new Date()
-  console.log('THE DATE ' + props.activity.date)
+
   const activityDate = new Date(props.activity.date)
   const diffInMs = now.getTime() - activityDate.getTime()
   const diffInMinutes = Math.floor(diffInMs / 60000)
