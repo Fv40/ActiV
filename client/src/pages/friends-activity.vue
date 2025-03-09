@@ -10,7 +10,7 @@ const activities = ref(getActivities())
 <template>
   <div class="columns is-multiline mt-3">
     <div v-if="currentUser" v-for="activity in activities" :key="activity.title" class="column is-full is-centered">
-      <ActivityBox :activity="activity" :user="getUserById(activity.userId)"/>
+      <ActivityBox :activity="activity" :user="getUserById(activity.userId)!"/>
     </div>
   </div>
 </template>

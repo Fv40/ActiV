@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-interface User {
+export interface User {
   id: number,
   profilePictureSource: string
   name: string

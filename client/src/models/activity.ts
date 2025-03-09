@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 
-interface Activity {
+export interface Activity {
   userId: number
   imageSource: string
   title: string
