@@ -54,7 +54,7 @@ const activities = ref<Activity[]>([
     title: 'Weightlifting',
     type: 'Strength',
     date: new Date(2025, 2, 2),
-  }
+  },
 ])
 
 export function getActivities() {
@@ -63,8 +63,8 @@ export function getActivities() {
 
 export function getActivitiesForUser(userId: number) {
   return activities.value
-  .filter((activity) => activity.userId === userId)
-  .sort((a, b) => b.date.getTime() - a.date.getTime())
+    .filter((activity) => activity.userId === userId)
+    .sort((a, b) => b.date.getTime() - a.date.getTime())
 }
 
 export function addActivity(activity: Activity) {
