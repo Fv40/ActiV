@@ -17,15 +17,15 @@ const userWorkoutStats = getUserStats().value.get(currentUser.value.id);
             </h1>
             <div class="columns is-mobile is-centered">
               <div class="column has-text-centered">
-                <p class="entry-title"><u>Distance Walked</u></p>
+                <p class="entry-title"><u>Distance<br>Walked</u></p>
                 <p class="entry">{{ item.userStats.distanceWalked }} mi</p>
               </div>
               <div class="column has-text-centered">
-                <p class="entry-title"><u>Time Worked</u></p>
+                <p class="entry-title"><u>Time<br>Worked</u></p>
                 <p class="entry">{{ item.userStats.timeWorkedOut }} min</p>
               </div>
               <div class="column has-text-centered">
-                <p class="entry-title"><u>Calories Consumed</u></p>
+                <p class="entry-title"><u>Calories<br>Consumed</u></p>
                 <p class="entry">{{ item.userStats.caloriesConsumed }} cal</p>
               </div>
             </div>
