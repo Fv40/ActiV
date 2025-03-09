@@ -68,7 +68,7 @@ function login(user) {
           >
           <RouterLink to="/" class="navbar-item pr-3"
             ><span class="icon"><i class="fa-solid fa-magnifying-glass"></i></span
-            >Search</RouterLink
+            >Search for Friends</RouterLink
           >
         </div>
 
