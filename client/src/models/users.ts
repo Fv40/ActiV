@@ -41,6 +41,10 @@ export function getUsers() {
   return users
 }
 
+export function getUserById(id: number) {
+  return users.value.find(user => user.id === id)
+}
+
 export function selectUser(user: User | null) {
   currentUser.value = user
 }

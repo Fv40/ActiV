@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { currentUser } from '@/models/users.ts'
-import { getActivities } from '@/models/activities.ts'
 import { getActivitiesForUser } from '@/models/activity'
 import ActivityBox from '@/components/ActivityBox.vue'
 
