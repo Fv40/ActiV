@@ -7,7 +7,7 @@ import type { Activity } from '@/models/activity'
 
 const showModal = ref(false)
 
-const newActivity = ref({
+const newActivity = ref<Activity>({
   userId: currentUser.value!.id,
   imageSource: 'https://picsum.photos/500/500',
   title: 'My workout',
@@ -17,7 +17,22 @@ const newActivity = ref({
 
 let activities = getActivitiesForUser(currentUser.value!.id)
 
+function openModal() {
+  newActivity.value = {
+    userId: currentUser.value!.id,
+    imageSource: '',
+    title: 'My workout',
+    type: 'Cardio',
+    date: new Date()
+  }
+  showModal.value = true
+}
+
 function saveActivity() {
+  // Set default values if user has left them blank
+  newActivity.value.title = newActivity.value.title || `My ${newActivity.value.type.toLocaleLowerCase()} workout`
+  newActivity.value.imageSource = newActivity.value.imageSource || 'https://mir-s3-cdn-cf.behance.net/project_modules/fs/73674f80778075.5ceb8de9562bc.jpg'
+
   addActivity({ ... newActivity.value })
   activities = getActivitiesForUser(currentUser.value!.id)
   showModal.value = false
@@ -33,7 +48,7 @@ function saveActivity() {
 
   <div class="columns is-flex is-justify-content-space-between is-align-items-flex-end">
     <div class="column is-narrow">
-      <button class="button is-warning is-light is-outlined is-rounded add-activity-button" @click="showModal = true"><span><i class="fa-solid fa-plus mr-2"></i></span>Add Activity</button>
+      <button class="button is-warning is-light is-outlined is-rounded add-activity-button" @click="openModal"><span><i class="fa-solid fa-plus mr-2"></i></span>Add Activity</button>
     </div>
   </div>
 
@@ -60,7 +75,7 @@ function saveActivity() {
           <label class="label">Type</label>
           <div class="control">
             <div class="select">
-              <select v-model="newActivity.type" default="Cardio">
+              <select v-model="newActivity.type">
                 <option>Cardio</option>
                 <option>Strength</option>
               </select>
