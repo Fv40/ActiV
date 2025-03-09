@@ -5,8 +5,6 @@ import NotificationList from '@/components/NotificationList.vue'
 import { currentUser } from '@/models/users'
 
 const router = useRouter()
-
-
 </script>
 
 <template>
