@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed } from 'vue'
 import { currentUser } from '@/models/users';
 import { getUserStats } from '@/models/userStats';
 
-const userWorkoutStats = getUserStats().value.get(currentUser.value.id);
+const userWorkoutStats = getUserStats().value.get(currentUser.value!.id);
 </script>
 
 <template>

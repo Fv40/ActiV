@@ -3,7 +3,7 @@ import { currentUser } from '@/models/users.ts'
 import { getActivitiesForUser } from '@/models/activity'
 import ActivityBox from '@/components/ActivityBox.vue'
 
-const activities = getActivitiesForUser(currentUser.value.id)
+const activities = getActivitiesForUser(currentUser.value!.id)
 </script>
 
 <template>

@@ -1,20 +1,12 @@
 <script setup lang="ts">
 import { defineProps, computed } from 'vue'
 import { getUsers } from '@/models/users'
+import type { User } from '@/models/users'
+import type { Activity } from '@/models/activity'
 
-// Define the props
 const props = defineProps<{
-  activity: {
-    imageSource: string;
-    title: string;
-    date: string;
-    type: string;
-  },
-  user: {
-      name: string;
-      username: string;
-      profilePictureSource: string;
-};
+  activity: Activity
+  user: User
 }>();
 
 const timeDifference = computed(() => {
