@@ -34,16 +34,16 @@ const workoutStats = ref({
             </h1>
             <div class="columns is-mobile is-centered">
               <div class="column has-text-centered">
-                <p><u>Distance Walked</u></p>
-                <p>{{ item.distance }} mi</p>
+                <p class ="entry-title"><u>Distance<br>Walked</u></p>
+                <p class="entry">{{ item.distance }} mi</p>
               </div>
               <div class="column has-text-centered">
-                <p><u>Time Worked</u></p>
-                <p>{{ item.duration }} min</p>
+                <p class="entry-title"><u>Time<br>Worked</u></p>
+                <p class="entry">{{ item.duration }} min</p>
               </div>
               <div class="column has-text-centered">
-                <p><u>Calories Consumed</u></p>
-                <p>{{ item.calories }} cal</p>
+                <p class="entry-title"><u>Calories<br>Consumed</u></p>
+                <p class="entry">{{ item.calories }} cal</p>
               </div>
             </div>
           </div>
