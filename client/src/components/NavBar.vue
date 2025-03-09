@@ -21,11 +21,9 @@ function activityLink(activityType: string) {
   <nav class="navbar is-warning" role="navigation">
     <div class="container">
       <div class="navbar-brand">
-        <RouterLink
-            to="/"
-            class="navbar-item pr-3 pl-4 router-link-active router-link-exact-active"
-            ><img class="logo" src="@/assets/newlogo.svg" width="40" /></RouterLink
-          >
+        <RouterLink to="/" class="navbar-item pr-3 pl-4 router-link-active router-link-exact-active"
+          ><img class="logo" src="@/assets/newlogo.svg" width="40"
+        /></RouterLink>
 
         <a
           role="button"
@@ -57,8 +55,8 @@ function activityLink(activityType: string) {
             ><span class="icon"><i class="fa-solid fa-chart-area"></i></span>Statistics</RouterLink
           >
           <RouterLink to="/" class="navbar-item pr-3"
-            ><span class="icon"><i class="fa-solid fa-magnifying-glass"></i></span
-            >Search for Friends</RouterLink
+            ><span class="icon"><i class="fa-solid fa-magnifying-glass"></i></span>Search for
+            Friends</RouterLink
           >
         </div>
 
@@ -67,7 +65,7 @@ function activityLink(activityType: string) {
             <div v-if="currentUser">
               <span>
                 <span><i class="fa-solid fa-user pr-2"></i></span> {{ currentUser.name }}
-                <button class="pl-2" @click="router.push('/logged-out'), selectUser(null)">
+                <button class="pl-2" @click="(router.push('/logged-out'), selectUser(null))">
                   <u>Log out</u>
                 </button>
               </span>
@@ -88,7 +86,7 @@ function activityLink(activityType: string) {
                       v-for="user in users"
                       :key="user.id"
                       class="dropdown-item"
-                      @click="selectUser(user), router.push('/')"
+                      @click="(selectUser(user), router.push('/'))"
                     >
                       {{ user.name }}
                     </a>

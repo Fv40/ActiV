@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 export interface User {
-  id: number,
+  id: number
   profilePictureSource: string
   name: string
   isAdmin: boolean
@@ -17,7 +17,8 @@ const users = ref<User[]>([
   },
   {
     id: 2,
-    profilePictureSource: 'https://st2.depositphotos.com/6169132/9571/v/450/depositphotos_95710278-stock-illustration-cartoon-woman-stock-photos.jpg',
+    profilePictureSource:
+      'https://st2.depositphotos.com/6169132/9571/v/450/depositphotos_95710278-stock-illustration-cartoon-woman-stock-photos.jpg',
     name: 'Jane Doe',
     isAdmin: false,
   },
@@ -42,7 +43,7 @@ export function getUsers() {
 }
 
 export function getUserById(id: number) {
-  return users.value.find(user => user.id === id)
+  return users.value.find((user) => user.id === id)
 }
 
 export function selectUser(user: User | null) {
