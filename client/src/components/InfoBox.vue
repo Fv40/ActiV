@@ -4,6 +4,13 @@ import { currentUser } from '@/models/users'
 import { getUserStats } from '@/models/userStats'
 
 const userWorkoutStats = getUserStats().value.get(currentUser.value!.id)
+
+function formatTime(minutes: number) {
+  const hours = Math.floor(minutes / 60)
+  const remainingMinutes = minutes % 60
+
+  return `${hours}h: ${remainingMinutes}m`
+}
 </script>
 
 <template>
@@ -26,7 +33,9 @@ const userWorkoutStats = getUserStats().value.get(currentUser.value!.id)
                 <p class="entry-title">
                   <u>Time<br />Worked</u>
                 </p>
-                <p class="entry">{{ item.userStats.timeWorkedOut }} min</p>
+                <p class="entry" style="white-space: nowrap">
+                  {{ formatTime(item.userStats.timeWorkedOut) }} min
+                </p>
               </div>
               <div class="column has-text-centered">
                 <p class="entry-title">

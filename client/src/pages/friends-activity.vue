@@ -15,7 +15,11 @@ const activities = ref(getActivities())
       :key="activity.title"
       class="column is-full is-centered"
     >
-      <ActivityBox v-if="getUserById(activity.userId)" :activity="activity" :user="getUserById(activity.userId)!" />
+      <ActivityBox
+        v-if="getUserById(activity.userId)"
+        :activity="activity"
+        :user="getUserById(activity.userId)!"
+      />
     </div>
   </div>
 </template>

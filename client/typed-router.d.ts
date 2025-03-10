@@ -23,5 +23,6 @@ declare module 'vue-router/auto-routes' {
     '/friends-activity': RouteRecordInfo<'/friends-activity', '/friends-activity', Record<never, never>, Record<never, never>>,
     '/logged-out': RouteRecordInfo<'/logged-out', '/logged-out', Record<never, never>, Record<never, never>>,
     '/my-activity': RouteRecordInfo<'/my-activity', '/my-activity', Record<never, never>, Record<never, never>>,
+    '/statistics': RouteRecordInfo<'/statistics', '/statistics', Record<never, never>, Record<never, never>>,
   }
 }
