@@ -8,16 +8,16 @@ const router = useRouter()
 const navbarBurgerActive = ref(false)
 const loginDropdownActive = ref(false)
 
-function activityLink(activityType: string) {
+function generateRoute(route: string) {
   if (currentUser.value) {
-    return `/${activityType}-activity`
+    return `/${route}`
   } else {
     return '/logged-out'
   }
 }
 
 function logout() {
-  router.push("/logged-out")
+  router.push('/logged-out')
   selectUser(null)
   users = getUsers()
 }
@@ -49,15 +49,15 @@ function logout() {
       <div class="navbar-menu" :class="{ 'is-active': navbarBurgerActive }">
         <div class="navbar-start">
           <RouterLink
-            :to="activityLink('my')"
+            :to="generateRoute('my-activity')"
             class="navbar-item pr-3 pl-4 router-link-active router-link-exact-active"
             ><span class="icon"><i class="fa-solid fa-person"></i></span>My Activity</RouterLink
           >
-          <RouterLink :to="activityLink('friends')" class="navbar-item pr-3"
+          <RouterLink :to="generateRoute('friends-activity')" class="navbar-item pr-3"
             ><span class="icon"><i class="fa-solid fa-people-group"></i></span>Friends'
             Activity</RouterLink
           >
-          <RouterLink to="/" class="navbar-item pr-3"
+          <RouterLink :to="generateRoute('statistics')" class="navbar-item pr-3"
             ><span class="icon"><i class="fa-solid fa-chart-area"></i></span>Statistics</RouterLink
           >
           <RouterLink to="/" class="navbar-item pr-3"
@@ -70,8 +70,13 @@ function logout() {
           <div class="navbar-item">
             <div v-if="currentUser">
               <span>
-                <RouterLink v-if="currentUser.isAdmin" to="/admin" class="navbar-item navbar-admin mr-3">
-                  <span><i class="fa-solid fa-triangle-exclamation pr-2"></i></span><strong><i>Admin Access</i></strong>
+                <RouterLink
+                  v-if="currentUser.isAdmin"
+                  to="/admin"
+                  class="navbar-item navbar-admin mr-3"
+                >
+                  <span><i class="fa-solid fa-triangle-exclamation pr-2"></i></span
+                  ><strong><i>Admin Access</i></strong>
                 </RouterLink>
 
                 <span><i class="fa-solid fa-user pr-2"></i></span> {{ currentUser.name }}
