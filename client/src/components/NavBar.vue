@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { getUsers, selectUser, currentUser } from '@/models/users'
 
-const users = getUsers()
+let users = getUsers()
 const router = useRouter()
 const navbarBurgerActive = ref(false)
 const loginDropdownActive = ref(false)
@@ -14,6 +14,12 @@ function activityLink(activityType: string) {
   } else {
     return '/logged-out'
   }
+}
+
+function logout() {
+  router.push("/logged-out")
+  selectUser(null)
+  users = getUsers()
 }
 </script>
 
@@ -64,8 +70,12 @@ function activityLink(activityType: string) {
           <div class="navbar-item">
             <div v-if="currentUser">
               <span>
+                <RouterLink v-if="currentUser.isAdmin" to="/admin" class="navbar-item navbar-admin mr-3">
+                  <span><i class="fa-solid fa-triangle-exclamation pr-2"></i></span><strong><i>Admin Access</i></strong>
+                </RouterLink>
+
                 <span><i class="fa-solid fa-user pr-2"></i></span> {{ currentUser.name }}
-                <button class="pl-2" @click="(router.push('/logged-out'), selectUser(null))">
+                <button class="pl-2" @click="(router.push('/logged-out'), logout())">
                   <u>Log out</u>
                 </button>
               </span>
@@ -101,4 +111,9 @@ function activityLink(activityType: string) {
   </nav>
 </template>
 
-<style scoped></style>
+<style scoped>
+.navbar-admin {
+  color: rgb(255, 255, 255);
+  display: inline;
+}
+</style>

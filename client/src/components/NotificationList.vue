@@ -2,10 +2,8 @@
 import { ref } from 'vue'
 
 const notifications = ref([
-  { text: 'Fake Success Notification', type: 'success' },
-  { text: 'Fake Info Notification', type: 'info' },
-  { text: 'Fake Warning Notification', type: 'warning' },
-  { text: 'Fake Danger Notification', type: 'danger' },
+  { text: 'Your friends have new activity', type: 'success' },
+  { text: 'Finish setting up your account', type: 'info' },
 ])
 
 function removeNotification(index: number) {

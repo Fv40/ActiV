@@ -39,7 +39,7 @@ const users = ref<User[]>([
 export const currentUser = ref<User | null>(null)
 
 export function getUsers() {
-  return users
+  return users.value
 }
 
 export function getUserById(id: number) {
@@ -48,4 +48,8 @@ export function getUserById(id: number) {
 
 export function selectUser(user: User | null) {
   currentUser.value = user
+}
+
+export function deleteUser(id: number) {
+  users.value = users.value.filter(user => user.id !== id)
 }
