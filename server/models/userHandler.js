@@ -3,6 +3,7 @@ import { connect } from "./connection.js";
 //const connection = require("./connection.js");
 
 const TABLE = "users";
+const DELETED = "%--DELETED--%";
 const userTable = () => 
     connect().from(TABLE);
 
@@ -10,32 +11,81 @@ const selectAllUsers = () => {
     return userTable().select("*");
 }
 
+const checkNotDeleted = () => {
+    return 
+}
+
 export async function getAllUsers() {
-    const { data, error } = await selectAllUsers();
+    const { data: users, error } = await selectAllUsers().not("username", 'ilike', DELETED);
 
     if (error) {
         throw error
     }
 
-    return data
+    users.filter(user => {
+        !user.username.startsWith(DELETED)
+    })
+
+    return users
 }
 
 export async function getUserById(id) {
-    const { data, error } = await selectAllUsers().eq("user_id", id);
+    const { data: user, error } = await selectAllUsers().eq("user_id", id).not("username", 'ilike', DELETED).single();
 
     if (error) {
         throw error
     }
 
-    return data
+    return user
 }
 
-export async function createUser(user) {
-    const { data, error } = await userTable().insert(user).select("*");
+export async function createUser(userToCreate) {
+    const { data: newUser, error } = await userTable().insert(userToCreate).select("*");
+
+    if (error) {
+        throw error
+    }
+
+    return newUser;
+}
+
+export async function updateUser(user, user_id) {
+    console.log(user);
+    const { data: updatedUser, error } = await userTable().update(user).eq("user_id", user_id).select("*").not("username", 'ilike', DELETED);
+
+    if (error) {
+        throw error
+    }
+
+    return updatedUser;
+}
+
+export async function deleteUser(user_id) { 
+    const { data: user, error: userError } = await selectAllUsers().eq("user_id", user_id).not("username", 'ilike', DELETED).single();
+
+    if (userError) {
+        throw userError
+    }
+
+    const deleteUser = {
+        username: `${user.username}_${DELETED}`,
+        email: `${user.email}_${DELETED}`
+    }
+
+    const { data: deletedUser, error } = await await userTable().update(deleteUser).eq("user_id", user_id).select("*").single();
+
+    if (error) {
+        throw error
+    }
     
-    if (error) {
-        throw error
-    }
-
-    return data;
+    return deletedUser;
 }
+
+// TODO: WEB-24: This file is not recognized as a CommonJS module so this does not work.
+// module.exports = {
+//     getAllUsers,
+//     getUserById,
+//     createUser,
+//     updateUser,
+//     deleteUser,
+// };

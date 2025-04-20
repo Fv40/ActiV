@@ -6,13 +6,34 @@ router
     .get("/", (req, res) => {
         userHandler.getAllUsers()
             .then((data) => res.json(data))
+            // TODO: WEB-28: Change this to use custom error handler
             .catch((error) => res.status(500).json({ error: error.message }));
     })
     .get("/:id", (req, res) => {
         const id = req.params.id;
+
         userHandler.getUserById(id)
             .then((data) => res.json(data))
             .catch((error) => res.status(500).json({ error: error.message }));
-    });
+    })
+    .post("/", (req, res) => {
+        const user = req.body;
+
+        userHandler.createUser(user)
+            .then((data) => res.status(201).json(data))
+            .catch((error) => res.status(500).json({ error: error.message }));
+    })
+    .put("/:id", (req, res) => {
+        const user = req.body;
+
+        userHandler.updateUser(user, req.params.id)
+            .then((data) => res.json(data))
+            .catch((error) => res.status(500).json({ error: error.message }));
+    })
+    .delete("/:id", (req, res) => {
+        userHandler.deleteUser(req.params.id)
+            .then(() => res.status(204).send())
+            .catch((error) => res.status(500).json({ error: error.message }));
+    })
 
 module.exports = router;
