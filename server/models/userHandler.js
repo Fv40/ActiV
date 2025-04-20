@@ -4,6 +4,7 @@ import { connect } from "./connection.js";
 
 const TABLE = "users";
 const DELETED = "%--DELETED--%";
+
 const userTable = () => 
     connect().from(TABLE);
 
