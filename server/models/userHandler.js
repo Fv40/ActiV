@@ -1,12 +1,10 @@
-import { connect } from "./connection.js";
-// TODO WEB-24: Use require here. require throws ReferenceError: require is not defined in this file only 
-//const connection = require("./connection.js");
+const connection = require("./connection.js");
 
 const TABLE = "users";
 const DELETED = "%--DELETED--%";
 
 const userTable = () => 
-    connect().from(TABLE);
+    connection.connect().from(TABLE);
 
 const selectAllUsers = () => {
     return userTable().select("*");
@@ -16,7 +14,7 @@ const checkNotDeleted = () => {
     return 
 }
 
-export async function getAllUsers() {
+async function getAllUsers() {
     const { data: users, error } = await selectAllUsers().not("username", 'ilike', DELETED);
 
     if (error) {
@@ -30,7 +28,7 @@ export async function getAllUsers() {
     return users
 }
 
-export async function getUserById(id) {
+async function getUserById(id) {
     const { data: user, error } = await selectAllUsers().eq("user_id", id).not("username", 'ilike', DELETED).single();
 
     if (error) {
@@ -40,7 +38,7 @@ export async function getUserById(id) {
     return user
 }
 
-export async function createUser(userToCreate) {
+async function createUser(userToCreate) {
     const { data: newUser, error } = await userTable().insert(userToCreate).select("*");
 
     if (error) {
@@ -50,7 +48,7 @@ export async function createUser(userToCreate) {
     return newUser;
 }
 
-export async function updateUser(user, user_id) {
+async function updateUser(user, user_id) {
     console.log(user);
     const { data: updatedUser, error } = await userTable().update(user).eq("user_id", user_id).select("*").not("username", 'ilike', DELETED);
 
@@ -61,7 +59,7 @@ export async function updateUser(user, user_id) {
     return updatedUser;
 }
 
-export async function deleteUser(user_id) { 
+async function deleteUser(user_id) { 
     const { data: user, error: userError } = await selectAllUsers().eq("user_id", user_id).not("username", 'ilike', DELETED).single();
 
     if (userError) {
@@ -82,11 +80,10 @@ export async function deleteUser(user_id) {
     return deletedUser;
 }
 
-// TODO: WEB-24: This file is not recognized as a CommonJS module so this does not work.
-// module.exports = {
-//     getAllUsers,
-//     getUserById,
-//     createUser,
-//     updateUser,
-//     deleteUser,
-// };
+module.exports = {
+    getAllUsers,
+    getUserById,
+    createUser,
+    updateUser,
+    deleteUser,
+};
