@@ -10,21 +10,13 @@ const selectAllUsers = () => {
     return userTable().select("*");
 }
 
-const checkNotDeleted = () => {
-    return 
-}
-
 async function getAllUsers() {
     const { data: users, error } = await selectAllUsers().not("username", 'ilike', DELETED);
 
     if (error) {
         throw error
     }
-
-    users.filter(user => {
-        !user.username.startsWith(DELETED)
-    })
-
+    
     return users
 }
 

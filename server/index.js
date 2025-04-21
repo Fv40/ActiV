@@ -1,6 +1,8 @@
 const PORT = process.env.PORT || 8090
 const express = require('express')
 const userController = require('./controllers/userController')
+const activityController = require("./controllers/activityController")
+
 require('dotenv').config()
 
 const app = express()
@@ -22,8 +24,9 @@ app.use((req, res, next) => {
 // Client files
 app.use("/", express.static("dist"))
 
-// Controller
+// Controllers
 app.use("/api/v1/users", userController)
+app.use("/api/v1/activities", activityController)
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`)

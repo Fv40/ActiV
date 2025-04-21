@@ -25,3 +25,34 @@ Content-Type: application/json
 
 ### delete user
 DELETE http://localhost:8090/api/v1/users/11
+
+# ACTIVITY CONTROLLER
+### get all activities for friendgroup
+GET http://localhost:8090/api/v1/activities/friendgroups/1
+
+### get activities for single user
+GET http://localhost:8090/api/v1/activities/1
+
+### create activity
+POST http://localhost:8090/api/v1/activities/
+Content-Type: application/json
+
+{
+  "activity_description": "Morning run",
+  "activity_type": "running",
+  "activity_date": "2023-10-01",
+  "duration_m": 30,
+  "thumbnail_src": "https://www.pngitem.com/pimgs/m/43-437426_running-man-free-pictures-man-running-png-transparent.png",
+  "user_id": 3
+}
+
+### update activity
+PUT http://localhost:8090/api/v1/activities/9
+Content-Type: application/json
+
+{
+  "duration_m": 40
+}
+
+### delete activity
+DELETE http://localhost:8090/api/v1/activities/8
