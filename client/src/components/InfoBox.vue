@@ -34,7 +34,7 @@ function formatTime(minutes: number) {
                   <u>Time<br />Worked</u>
                 </p>
                 <p class="entry" style="white-space: nowrap">
-                  {{ formatTime(item.userStats.timeWorkedOut) }} min
+                  {{ formatTime(item.userStats.timeWorkedOut) }}
                 </p>
               </div>
               <div class="column has-text-centered">
