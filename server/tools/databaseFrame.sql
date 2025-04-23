@@ -1,7 +1,7 @@
 -- Creation statements for DB tables
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
+    username TEXT NOT NULL UNIQUE,
     profile_picture_source VARCHAR(255),
     email VARCHAR(100) NOT NULL UNIQUE,
     friendgroups INT[] DEFAULT '{}',
@@ -16,4 +16,13 @@ CREATE TABLE activities (
     thumbnail_src TEXT,
     activity_description TEXT,
     duration_m INT(2)
+    );
+
+CREATE TABLE friendgroups (
+    group_id SERIAL PRIMARY KEY,
+    group_name TEXT NOT NULL,
+    group_description TEXT,
+    group_picture_source VARCHAR(255),
+    owner_id INT NOT NULL REFERENCES users(user_id),
+    friendgroup_members INT[] DEFAULT '{}'
     );
