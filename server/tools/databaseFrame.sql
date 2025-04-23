@@ -17,3 +17,12 @@ CREATE TABLE activities (
     activity_description TEXT,
     duration_m INT(2)
     );
+
+CREATE TABLE friendgroups (
+    group_id SERIAL PRIMARY KEY,
+    group_name TEXT NOT NULL,
+    group_description TEXT,
+    group_picture_source VARCHAR(255),
+    owner_id INT NOT NULL REFERENCES users(user_id),
+    friendgroup_members INT[] DEFAULT '{}'
+    );
