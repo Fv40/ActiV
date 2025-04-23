@@ -24,7 +24,7 @@ Content-Type: application/json
 }
 
 ### delete user
-DELETE http://localhost:8090/api/v1/users/11
+DELETE http://localhost:8090/api/v1/users/18
 
 # ACTIVITY CONTROLLER
 ### get all activities for friendgroup

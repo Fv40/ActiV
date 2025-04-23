@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { currentUser } from '@/models/users'
+import { refSession } from '@/models/connection/session'
 import { getUserStats } from '@/models/userStats'
 
-const userWorkoutStats = getUserStats().value.get(currentUser.value!.id)
+let currentSession = refSession()
+let currentUser = currentSession.value.user
+
+const userWorkoutStats = currentUser ? getUserStats().value.get(currentUser.user_id) : null
 
 function formatTime(minutes: number) {
   const hours = Math.floor(minutes / 60)

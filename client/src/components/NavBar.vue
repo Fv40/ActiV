@@ -1,25 +1,32 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
-import { getUsers, selectUser, currentUser } from '@/models/users'
+import { getUsers, type User } from '@/models/users'
+import * as session from '@/models/connection/session'
 
-let users = getUsers()
+let currentSession = session.refSession()
+let users = ref<User[]>([])
+
+getUsers().then((data) => {
+  users.value = data
+})
+
 const router = useRouter()
 const navbarBurgerActive = ref(false)
 const loginDropdownActive = ref(false)
 
 function generateRoute(route: string) {
-  if (currentUser.value) {
+  if (session.isLoggedIn()) {
     return `/${route}`
   } else {
     return '/logged-out'
   }
 }
 
-function logout() {
-  router.push('/logged-out')
-  selectUser(null)
-  users = getUsers()
+function login(userId: number) {
+  session.login(userId).then(() => {
+    router.push('/')
+  })
 }
 </script>
 
@@ -68,10 +75,10 @@ function logout() {
 
         <div class="navbar-end">
           <div class="navbar-item">
-            <div v-if="currentUser">
+            <div v-if="session.isLoggedIn()" class="buttons">
               <span>
                 <RouterLink
-                  v-if="currentUser.isAdmin"
+                  v-if="session.isAdmin()"
                   to="/admin"
                   class="navbar-item navbar-admin mr-3"
                 >
@@ -79,8 +86,8 @@ function logout() {
                   ><strong><i>Admin Access</i></strong>
                 </RouterLink>
 
-                <span><i class="fa-solid fa-user pr-2"></i></span> {{ currentUser.name }}
-                <button class="pl-2" @click="(router.push('/logged-out'), logout())">
+                <span><i class="fa-solid fa-user pr-2"></i></span> {{ currentSession.user?.username }}
+                <button class="pl-2" @click="(router.push('/logged-out'), session.logout())">
                   <u>Log out</u>
                 </button>
               </span>
@@ -99,11 +106,11 @@ function logout() {
                   <div class="dropdown-content">
                     <a
                       v-for="user in users"
-                      :key="user.id"
+                      :key="user.user_id"
                       class="dropdown-item"
-                      @click="(selectUser(user), router.push('/'))"
+                      @click="login(user.user_id)"
                     >
-                      {{ user.name }}
+                      {{ user.username }}
                     </a>
                   </div>
                 </div>

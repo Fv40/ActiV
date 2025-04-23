@@ -1,20 +1,29 @@
 <script setup lang="ts">
+import * as session from '@/models/connection/session'
 import { ref } from 'vue'
-import { getUsers, deleteUser, currentUser } from '@/models/users'
+import { getUsers, deleteUser } from '@/models/users'
 import type { User } from '@/models/users'
 
-const users = ref<User[]>(getUsers())
+let users = ref<User[]>([])
+
+getUsers().then((data) => {
+  users.value = data
+})
+
+const currentUser = session.refSession().value!.user
+
 const showModal = ref(false)
-const selectedUser = ref<User>({ id: 0, profilePictureSource: '', name: '', isAdmin: false })
+const selectedUser = ref<User>({ user_id: 0, profile_picture_source: '', username: '', email: '', isAdmin: false })
 
 function removeUser(userId: number) {
-  deleteUser(userId)
-  users.value = getUsers()
+  deleteUser(userId).then(() => {
+    users.value = users.value.filter((user) => user.user_id !== userId);
+  })
 }
 
 function saveUser() {
   if (selectedUser.value) {
-    const userIndex = users.value.findIndex((user) => user.id === selectedUser.value!.id)
+    const userIndex = users.value.findIndex((user) => user.user_id === selectedUser.value!.user_id)
     if (userIndex !== -1) {
       users.value[userIndex] = { ...selectedUser.value }
     }
@@ -36,24 +45,17 @@ function saveUser() {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="user in users" :key="user.id">
-          <td><img class="image is-48x48" v-bind:src="user.profilePictureSource" /></td>
-          <td>{{ user.id }}</td>
-          <td>{{ user.name }}</td>
+        <tr v-for="user in users" :key="user.user_id">
+          <td><img class="image is-48x48" v-bind:src="user.profile_picture_source" /></td>
+          <td>{{ user.user_id }}</td>
+          <td>{{ user.username }}</td>
           <td>{{ user.isAdmin ? 'Yes' : 'No' }}</td>
           <td>
             <div class="column">
-              <button
-                v-if="!user.isAdmin"
-                class="button is-danger mr-2"
-                @click="removeUser(user.id)"
-              >
+              <button v-if="!user.isAdmin" class="button is-danger mr-2" @click="removeUser(user.user_id)">
                 <i class="fa-solid fa-trash-can pr-2"></i>Delete User
               </button>
-              <button
-                class="button is-info ml-2"
-                @click="((showModal = true), (selectedUser = { ...user }))"
-              >
+              <button class="button is-info ml-2" @click="((showModal = true), (selectedUser = { ...user }))">
                 <i class="fa-solid fa-user-pen pr-2"></i>Edit User
               </button>
             </div>
@@ -73,32 +75,19 @@ function saveUser() {
         <div class="field">
           <label class="label">Name</label>
           <div class="control">
-            <input
-              class="input"
-              type="text"
-              v-model="selectedUser!.name"
-              placeholder="Enter new name"
-            />
+            <input class="input" type="text" v-model="selectedUser!.username" placeholder="Enter new name" />
           </div>
         </div>
         <div class="field">
           <label class="label">Admin</label>
           <div class="control">
-            <label
-              v-if="currentUser"
-              class="checkbox"
-              :class="{ 'admin-revokation-message': selectedUser.id === currentUser?.id }"
-              :data-tooltip="
-                selectedUser && selectedUser.id === currentUser!.id
-                  ? 'You cannot revoke your own admin status'
-                  : ''
-              "
-            >
-              <input
-                type="checkbox"
-                v-model="selectedUser!.isAdmin"
-                :disabled="selectedUser && selectedUser.id === currentUser?.id"
-              />
+            <label v-if="currentUser" class="checkbox"
+              :class="{ 'admin-revokation-message': selectedUser.user_id === currentUser?.user_id }" :data-tooltip="selectedUser && selectedUser.user_id === currentUser!.user_id
+                ? 'You cannot revoke your own admin status'
+                : ''
+                ">
+              <input type="checkbox" v-model="selectedUser!.isAdmin"
+                :disabled="selectedUser && selectedUser.user_id === currentUser?.user_id" />
               Is Admin
             </label>
           </div>

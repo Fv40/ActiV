@@ -1,4 +1,5 @@
 const connection = require("./connection.js");
+const { v4: uuidv4 } = require('uuid');
 
 const TABLE = "users";
 const DELETED = "%--DELETED--%";
@@ -58,9 +59,11 @@ async function deleteUser(user_id) {
         throw userError
     }
 
+    // If a user that shares a username with a deleted user is itself deleted, a duplicate key error will be thrown by db
+    const uuid = uuidv4();
     const deleteUser = {
-        username: `${user.username}_${DELETED}`,
-        email: `${user.email}_${DELETED}`
+        username: `${user.username}_${DELETED}_${uuid}`,
+        email: `${user.email}_${DELETED}_${uuid}`
     }
 
     const { data: deletedUser, error } = await await userTable().update(deleteUser).eq("user_id", user_id).select("*").single();

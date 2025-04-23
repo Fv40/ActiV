@@ -31,7 +31,7 @@ router
     })
     .delete("/:id", (req, res) => {
         userHandler.deleteUser(req.params.id)
-            .then(() => res.status(204).send())
+            .then((data) => res.status(200).send(data))
             .catch((error) => res.status(500).json({ error: error.message }));
     })
 
