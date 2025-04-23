@@ -1,30 +1,32 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { currentUser } from '@/models/users.ts'
+import * as session from '@/models/connection/session'
 import { getActivitiesForUser, addActivity } from '@/models/activity'
 import ActivityBox from '@/components/ActivityBox.vue'
 import type { Activity } from '@/models/activity'
 
+let currentUser = session.refSession().value!.user
 const showModal = ref(false)
 
 const newActivity = ref<Activity>({
-  userId: currentUser.value!.id,
+  userId: currentUser!.user_id,
   imageSource: 'https://picsum.photos/500/500',
   title: 'My workout',
   type: 'Cardio',
   date: new Date(),
 })
 
-let activities = getActivitiesForUser(currentUser.value!.id)
+let activities = getActivitiesForUser(currentUser!.user_id)
 
 function openModal() {
   newActivity.value = {
-    userId: currentUser.value!.id,
+    userId: currentUser!.user_id,
     imageSource: '',
     title: 'My workout',
     type: 'Cardio',
     date: new Date(),
   }
+
   showModal.value = true
 }
 
@@ -37,7 +39,7 @@ function saveActivity() {
     'https://mir-s3-cdn-cf.behance.net/project_modules/fs/73674f80778075.5ceb8de9562bc.jpg'
 
   addActivity({ ...newActivity.value })
-  activities = getActivitiesForUser(currentUser.value!.id)
+  activities = getActivitiesForUser(currentUser!.user_id)
   showModal.value = false
 }
 </script>

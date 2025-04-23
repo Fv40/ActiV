@@ -1,14 +1,17 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import InfoBox from '@/components/InfoBox.vue'
 import NotificationList from '@/components/NotificationList.vue'
-import { currentUser } from '@/models/users'
+import * as session from '@/models/connection/session'
 
 const router = useRouter()
+
+let currentUser = ref(session.refSession().value.user)
 </script>
 
 <template>
-  <div v-if="currentUser" class="home">
+  <div v-if="session.refSession().value.user" class="home">
     <div class="container">
       <div class="columns is-centered is-paddingless">
         <div class="column is-half">
