@@ -1,84 +1,103 @@
 const connection = require("./connection.js");
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 
 const TABLE = "users";
 const DELETED = "%--DELETED--%";
 
-const userTable = () => 
-    connection.connect().from(TABLE);
+const userTable = () => connection.connect().from(TABLE);
 
 const selectAllUsers = () => {
-    return userTable().select("*");
-}
+  return userTable().select("*");
+};
 
 async function getAllUsers() {
-    const { data: users, error } = await selectAllUsers().not("username", 'ilike', DELETED);
+  const { data: users, error } = await selectAllUsers().not(
+    "username",
+    "ilike",
+    DELETED
+  );
 
-    if (error) {
-        throw error
-    }
-    
-    return users
+  if (error) {
+    throw error;
+  }
+
+  return users;
 }
 
 async function getUserById(id) {
-    const { data: user, error } = await selectAllUsers().eq("user_id", id).not("username", 'ilike', DELETED).single();
+  const { data: user, error } = await selectAllUsers()
+    .eq("user_id", id)
+    .not("username", "ilike", DELETED)
+    .single();
 
-    if (error) {
-        throw error
-    }
+  if (error) {
+    throw error;
+  }
 
-    return user
+  return user;
 }
 
 async function createUser(userToCreate) {
-    const { data: newUser, error } = await userTable().insert(userToCreate).select("*");
+  const { data: newUser, error } = await userTable()
+    .insert(userToCreate)
+    .select("*");
 
-    if (error) {
-        throw error
-    }
+  if (error) {
+    throw error;
+  }
 
-    return newUser;
+  return newUser;
 }
 
 async function updateUser(user, user_id) {
-    console.log(user);
-    const { data: updatedUser, error } = await userTable().update(user).eq("user_id", user_id).select("*").not("username", 'ilike', DELETED);
+  console.log(user);
+  const { data: updatedUser, error } = await userTable()
+    .update(user)
+    .eq("user_id", user_id)
+    .select("*")
+    .not("username", "ilike", DELETED);
 
-    if (error) {
-        throw error
-    }
+  if (error) {
+    throw error;
+  }
 
-    return updatedUser;
+  return updatedUser;
 }
 
-async function deleteUser(user_id) { 
-    const { data: user, error: userError } = await selectAllUsers().eq("user_id", user_id).not("username", 'ilike', DELETED).single();
+async function deleteUser(user_id) {
+  const { data: user, error: userError } = await selectAllUsers()
+    .eq("user_id", user_id)
+    .not("username", "ilike", DELETED)
+    .single();
 
-    if (userError) {
-        throw userError
-    }
+  if (userError) {
+    throw userError;
+  }
 
-    // If a user that shares a username with a deleted user is itself deleted, a duplicate key error will be thrown by db
-    const uuid = uuidv4();
-    const deleteUser = {
-        username: `${user.username}_${DELETED}_${uuid}`,
-        email: `${user.email}_${DELETED}_${uuid}`
-    }
+  // If a user that shares a username with a deleted user is itself deleted, a duplicate key error will be thrown by db
+  const uuid = uuidv4();
+  const deleteUser = {
+    username: `${user.username}_${DELETED}_${uuid}`,
+    email: `${user.email}_${DELETED}_${uuid}`,
+  };
 
-    const { data: deletedUser, error } = await await userTable().update(deleteUser).eq("user_id", user_id).select("*").single();
+  const { data: deletedUser, error } = await await userTable()
+    .update(deleteUser)
+    .eq("user_id", user_id)
+    .select("*")
+    .single();
 
-    if (error) {
-        throw error
-    }
-    
-    return deletedUser;
+  if (error) {
+    throw error;
+  }
+
+  return deletedUser;
 }
 
 module.exports = {
-    getAllUsers,
-    getUserById,
-    createUser,
-    updateUser,
-    deleteUser,
+  getAllUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
 };
