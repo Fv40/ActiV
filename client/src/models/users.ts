@@ -10,13 +10,17 @@ export interface User {
 }
 
 export function getUsers(): Promise<User[]> {
-  return api<User[]>('get', '/users')
+  return api<User[]>('get', '/users', {})
 }
 
 export function getUserById(id: number): Promise<User> {
-  return api<User>('get', `/users/${id}`)
+  return api<User>('get', `/users/${id}`, {})
+}
+
+export function updateUser(id: number, updateBody: object): Promise<User> {
+  return api<User>('put', `/users/${id}`, updateBody)
 }
 
 export function deleteUser(id: number): Promise<User> {
-  return api<User>('delete', `/users/${id}`)
+  return api<User>('delete', `/users/${id}`, {})
 }
