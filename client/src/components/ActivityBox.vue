@@ -38,11 +38,11 @@ const timeDifference = computed(() => {
       <div class="media">
         <div class="media-left">
           <figure class="image is-48x48">
-            <img v-bind:src="user.profilePictureSource" alt="Profile picture" />
+            <img v-bind:src="user.profile_picture_source" alt="Profile picture" />
           </figure>
         </div>
         <div class="media-content">
-          <p class="title is-4">{{ user.name }}</p>
+          <p class="title is-4">{{ user.username }}</p>
         </div>
       </div>
 
