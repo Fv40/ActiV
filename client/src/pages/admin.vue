@@ -1,14 +1,19 @@
 <script setup lang="ts">
 import * as session from '@/models/connection/session'
 import { ref } from 'vue'
-import { getUsers, deleteUser } from '@/models/users'
+import { getUsers, deleteUser, updateUser } from '@/models/users'
 import type { User } from '@/models/users'
 
 let users = ref<User[]>([])
 
-getUsers().then((data) => {
-  users.value = data
-})
+// TODO: Improve the way the user list is refreshed
+function updateUserList() {
+  getUsers().then((data) => {
+    users.value = data
+  })
+}
+
+updateUserList()
 
 const currentUser = session.refSession().value!.user
 
@@ -17,16 +22,16 @@ const selectedUser = ref<User>({ user_id: 0, profile_picture_source: '', usernam
 
 function removeUser(userId: number) {
   deleteUser(userId).then(() => {
-    users.value = users.value.filter((user) => user.user_id !== userId);
+    updateUserList()
   })
 }
 
 function saveUser() {
   if (selectedUser.value) {
-    const userIndex = users.value.findIndex((user) => user.user_id === selectedUser.value!.user_id)
-    if (userIndex !== -1) {
-      users.value[userIndex] = { ...selectedUser.value }
-    }
+    updateUser(selectedUser.value.user_id, { "username": selectedUser.value.username, "isAdmin": selectedUser.value.isAdmin }).then((updatedUser) => {
+      updateUserList()
+    })
+
     showModal.value = false
   }
 }
@@ -55,7 +60,8 @@ function saveUser() {
               <button v-if="!user.isAdmin" class="button is-danger mr-2" @click="removeUser(user.user_id)">
                 <i class="fa-solid fa-trash-can pr-2"></i>Delete User
               </button>
-              <button class="button is-info ml-2" @click="((showModal = true), (selectedUser = { ...user }))">
+              <button class="button is-info ml-2"
+                @click="((showModal = true), (selectedUser = ref({ ...user }).value))">
                 <i class="fa-solid fa-user-pen pr-2"></i>Edit User
               </button>
             </div>
@@ -94,7 +100,7 @@ function saveUser() {
         </div>
       </section>
       <footer class="modal-card-foot">
-        <button class="button is-success" @click="saveUser">Save</button>
+        <button class="button is-success" @click="saveUser()">Save</button>
         <button class="button" @click="showModal = false">Cancel</button>
       </footer>
     </div>

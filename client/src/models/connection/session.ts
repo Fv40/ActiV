@@ -2,8 +2,8 @@ import { ref } from 'vue'
 import * as connection from './connection'
 import { getUserById, type User } from '../users'
 
-export function api<T>(method: string, action: string): Promise<T> {
-  return connection.api<T>(method, action)
+export function api<T>(method: string, action: string, body: object): Promise<T> {
+  return connection.api<T>(method, action, body)
 }
 
 const session = ref({
