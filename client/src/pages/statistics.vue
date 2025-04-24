@@ -3,11 +3,13 @@ import { ref } from 'vue'
 import { Pie } from 'vue-chartjs'
 import { Chart, Title, Tooltip, Legend, ArcElement, CategoryScale, LinearScale } from 'chart.js'
 import { TODAY, THIS_WEEK, getUserStats } from '@/models/userStats'
-import { currentUser } from '@/models/users'
+import { refSession } from '@/models/connection/session'
 
 Chart.register(Title, Tooltip, Legend, ArcElement, CategoryScale, LinearScale)
 
-const userStats = getUserStats().value.get(currentUser.value!.id)
+const currentUser = refSession().value.user
+
+const userStats = getUserStats().value.get(currentUser!.user_id)
 const statsToday = userStats![0].userStats
 const statsWeek = userStats![1].userStats
 const statsAllTime = userStats![2].userStats
