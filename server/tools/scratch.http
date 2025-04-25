@@ -60,3 +60,6 @@ DELETE http://localhost:8090/api/v1/activities/8
 # FRIENDGROUP CONTROLLER
 ### get friendgroup by id
 GET http://localhost:8090/api/v1/friendgroups/1
+
+### get all activities for friendgroup
+GET http://localhost:8090/api/v1/friendgroups/1/activities

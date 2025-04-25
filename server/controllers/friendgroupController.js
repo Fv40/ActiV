@@ -14,7 +14,7 @@ router
     const group_id = req.params.group_id;
 
     friendgroupHandler
-      .getFriendGroupById(group_id)
+      .getAllActivitiesForFriendGroup(group_id)
       .then((data) => res.json(data))
       .catch((error) => res.status(500).json({ error: error.message }));
   });
