@@ -23,28 +23,21 @@ async function getAllActivities() {
   return activities;
 }
 
-async function getAllActivitiesForFriendGroup() {
-  // TODO WEB-36: Get all users from friend group
-  /*
-    const { data: user_ids, error } = await friendGroupHandler.getUsersForFriendGroup(friendgroup_id);
-
-    if (error) {
-        throw error
-    }
-    
-    const { data: activities, error } = await selectAllActivities().ilike("user_id", "in", user_ids).not("activity_description", "ilike", DELETED);
-
-    if (error) {
-        throw error
-    }
-
-    return activities
-    */
-}
-
 async function getActivitiesForUser(user_id) {
   const { data: activities, error } = await selectAllActivities()
     .eq("user_id", user_id)
+    .not("activity_description", "ilike", constants.DELETED);
+
+  if (error) {
+    throw error;
+  }
+
+  return activities;
+}
+
+async function getActivitiesForBulkUsers(user_ids) {
+  const { data: activities, error } = await selectAllActivities()
+    .in("user_id", user_ids)
     .not("activity_description", "ilike", constants.DELETED);
 
   if (error) {
@@ -109,8 +102,8 @@ async function deleteActivity(activity_id) {
 
 module.exports = {
   getAllActivities,
-  getAllActivitiesForFriendGroup,
   getActivitiesForUser,
+  getActivitiesForBulkUsers,
   createActivity,
   updateActivity,
   deleteActivity,

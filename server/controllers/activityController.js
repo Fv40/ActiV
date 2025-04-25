@@ -18,12 +18,6 @@ router
       // TODO: WEB-28: Change this to use custom error handler
       .catch((error) => res.status(500).json({ error: error.message }));
   })
-  .get("/frendgroups/:friendgroup_id", (req, res) => {
-    activityHandler
-      .getAllActivitiesForFriendGroup()
-      .then((data) => res.json(data))
-      .catch((error) => res.status(500).json({ error: error.message }));
-  })
   .post("/", (req, res) => {
     const activity = req.body;
 
