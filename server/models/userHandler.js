@@ -1,6 +1,8 @@
 const constants = require("./constants.js");
 const connection = require("./connection.js");
+const friendgroupHandler = require("../models/friendgroupHandler.js");
 const { v4: uuidv4 } = require("uuid");
+const { get } = require("../controllers/friendgroupController.js");
 
 const TABLE = "users";
 
@@ -14,7 +16,7 @@ async function getAllUsers() {
   const { data: users, error } = await selectAllUsers().not(
     "username",
     "ilike",
-    DELETED
+    constants.DELETED
   );
 
   if (error) {
@@ -35,6 +37,20 @@ async function getUserById(id) {
   }
 
   return user;
+}
+
+async function getFriendgroupsForUser(user_id) {
+  const { data: friendgroups, error } = await userTable()
+    .select("friendgroups")
+    .eq("user_id", user_id)
+    .not("username", "ilike", constants.DELETED)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return friendgroups;
 }
 
 async function createUser(userToCreate) {
@@ -97,6 +113,7 @@ async function deleteUser(user_id) {
 module.exports = {
   getAllUsers,
   getUserById,
+  getFriendgroupsForUser,
   createUser,
   updateUser,
   deleteUser,
