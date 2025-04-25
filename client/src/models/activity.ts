@@ -5,7 +5,7 @@ export interface Activity {
   user_id: number
   thumbnail_src: string
   activity_description: string
-  activity_type: string,
+  activity_type: string
   duration_m: number
   activity_date: Date
 }
