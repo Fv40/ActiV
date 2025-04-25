@@ -6,19 +6,18 @@ export interface Activity {
   thumbnail_src: string
   activity_description: string
   activity_type: string
+  duration_m: number
   activity_date: Date
 }
 
 export function getActivities(): Promise<Activity[]> {
-  return session.api("get", "/activities", {})
+  return session.api('get', '/activities', {})
 }
 
 export function getActivitiesForUser(userId: number): Promise<Activity[]> {
-  return session.api("get", `/activities/${userId}`, {})
+  return session.api('get', `/activities/${userId}`, {})
 }
 
-export function addActivity(activity: Activity):Promise<Activity[]> {
-  return session.api("post", "/activities", {
-    activity
-  })
+export function addActivity(activity: Activity): Promise<Activity[]> {
+  return session.api('post', '/activities', activity)
 }

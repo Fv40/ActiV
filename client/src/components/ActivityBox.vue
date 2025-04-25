@@ -53,6 +53,7 @@ const timeDifference = computed(() => {
         {{ activity.activity_description }}
         <br />
         <u>{{ activity.activity_type }}</u>
+        ({{ activity.duration_m }} minutes)
         <br />
         <time style="opacity: 70%">{{ timeDifference }}</time>
       </div>

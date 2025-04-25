@@ -14,6 +14,7 @@ const newActivity = ref<Activity>({
   activity_description: 'My workout',
   activity_type: 'Cardio',
   activity_date: new Date(),
+  duration_m: 0
 })
 
 const activities = ref<Activity[]>([])
@@ -29,6 +30,7 @@ function openModal() {
     activity_description: 'My workout',
     activity_type: 'Cardio',
     activity_date: new Date(),
+    duration_m: 0,
   }
 
   showModal.value = true
@@ -42,8 +44,12 @@ function saveActivity() {
     newActivity.value.thumbnail_src ||
     'https://mir-s3-cdn-cf.behance.net/project_modules/fs/73674f80778075.5ceb8de9562bc.jpg'
 
-  addActivity({ ...newActivity.value })
-  //activities = getActivitiesForUser(currentUser!.user_id)
+  addActivity(newActivity.value).then(() => {
+    getActivitiesForUser(currentUser!.user_id).then((data) => {
+      activities.value = data
+    })
+  })
+
   showModal.value = false
 }
 </script>
@@ -89,6 +95,12 @@ function saveActivity() {
           </div>
         </div>
         <div class="field">
+          <label class="label">Duration (minutes)</label>
+          <div class="control">
+            <input class="input" type="text" v-model="newActivity.duration_m" />
+          </div>
+        </div>
+        <div class="field">
           <label class="label">Type</label>
           <div class="control">
             <div class="select">
@@ -101,7 +113,7 @@ function saveActivity() {
         </div>
       </section>
       <footer class="modal-card-foot">
-        <button class="button is-success" @click="saveActivity">Save</button>
+        <button class="button is-success mr-3" @click="saveActivity">Save</button>
         <button class="button is-danger" @click="showModal = !showModal">Cancel</button>
       </footer>
     </div>
