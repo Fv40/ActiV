@@ -1,8 +1,6 @@
 const constants = require("./constants.js");
 const connection = require("./connection.js");
-const friendgroupHandler = require("../models/friendgroupHandler.js");
 const { v4: uuidv4 } = require("uuid");
-const { get } = require("../controllers/friendgroupController.js");
 
 const TABLE = "users";
 
