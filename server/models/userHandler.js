@@ -1,8 +1,8 @@
+const constants = require("./constants.js");
 const connection = require("./connection.js");
 const { v4: uuidv4 } = require("uuid");
 
 const TABLE = "users";
-const DELETED = "%--DELETED--%";
 
 const userTable = () => connection.connect().from(TABLE);
 
@@ -14,7 +14,7 @@ async function getAllUsers() {
   const { data: users, error } = await selectAllUsers().not(
     "username",
     "ilike",
-    DELETED
+    constants.DELETED
   );
 
   if (error) {
@@ -27,7 +27,7 @@ async function getAllUsers() {
 async function getUserById(id) {
   const { data: user, error } = await selectAllUsers()
     .eq("user_id", id)
-    .not("username", "ilike", DELETED)
+    .not("username", "ilike", constants.DELETED)
     .single();
 
   if (error) {
@@ -35,6 +35,20 @@ async function getUserById(id) {
   }
 
   return user;
+}
+
+async function getFriendgroupsForUser(user_id) {
+  const { data: friendgroups, error } = await userTable()
+    .select("friendgroups")
+    .eq("user_id", user_id)
+    .not("username", "ilike", constants.DELETED)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return friendgroups;
 }
 
 async function createUser(userToCreate) {
@@ -55,7 +69,7 @@ async function updateUser(user, user_id) {
     .update(user)
     .eq("user_id", user_id)
     .select("*")
-    .not("username", "ilike", DELETED);
+    .not("username", "ilike", constants.DELETED);
 
   if (error) {
     throw error;
@@ -67,7 +81,7 @@ async function updateUser(user, user_id) {
 async function deleteUser(user_id) {
   const { data: user, error: userError } = await selectAllUsers()
     .eq("user_id", user_id)
-    .not("username", "ilike", DELETED)
+    .not("username", "ilike", constants.DELETED)
     .single();
 
   if (userError) {
@@ -77,8 +91,8 @@ async function deleteUser(user_id) {
   // If a user that shares a username with a deleted user is itself deleted, a duplicate key error will be thrown by db
   const uuid = uuidv4();
   const deleteUser = {
-    username: `${user.username}_${DELETED}_${uuid}`,
-    email: `${user.email}_${DELETED}_${uuid}`,
+    username: `${user.username}_${constants.DELETED}_${uuid}`,
+    email: `${user.email}_${constants.DELETED}_${uuid}`,
   };
 
   const { data: deletedUser, error } = await await userTable()
@@ -97,6 +111,7 @@ async function deleteUser(user_id) {
 module.exports = {
   getAllUsers,
   getUserById,
+  getFriendgroupsForUser,
   createUser,
   updateUser,
   deleteUser,

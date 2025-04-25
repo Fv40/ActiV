@@ -15,6 +15,13 @@ router
             .then((data) => res.json(data))
             .catch((error) => res.status(500).json({ error: error.message }));
     })
+    .get("/:id/friendgroups", (req, res) => {
+        const id = req.params.id;
+
+        userHandler.getFriendgroupsForUser(id)
+            .then((data) => res.json(data))
+            .catch((error) => res.status(500).json({ error: error.message }));
+    })
     .post("/", (req, res) => {
         const user = req.body;
 
