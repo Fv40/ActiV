@@ -1,1 +1,5 @@
-export const DELETED = "%--DELETED--%";
+const DELETED = "%--DELETED--%";
+
+module.exports = {
+  DELETED,
+};

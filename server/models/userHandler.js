@@ -1,4 +1,4 @@
-const constants = require("../constants.js");
+const constants = require("./constants.js");
 const connection = require("./connection.js");
 const { v4: uuidv4 } = require("uuid");
 
