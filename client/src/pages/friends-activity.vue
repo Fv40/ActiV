@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { refSession } from '@/models/connection/session'
-import { getUserById, getUsers, type User } from '@/models/users.ts'
-import { getActivities } from '@/models/activity.ts'
+import { getUsers, type User } from '@/models/users.ts'
+import { getActivities, type Activity } from '@/models/activity.ts'
 import ActivityBox from '@/components/ActivityBox.vue'
 
-const activities = ref(getActivities())
+const activities = ref<Activity[]>([])
+
+getActivities().then((data) => {
+  activities.value = data
+})
 
 const users = ref<User[]>([])
 getUsers().then((data) => {
@@ -20,12 +24,12 @@ const currentUser = refSession().value.user
     <div
       v-if="currentUser"
       v-for="activity in activities"
-      :key="activity.title"
+      :key="activity.activity_description"
       class="column is-full is-centered"
     >
       <ActivityBox
         :activity="activity"
-        :user="users.find((user) => user.user_id === activity.userId)!"
+        :user="users.find((user) => user.user_id === activity.user_id)!"
       />
     </div>
   </div>

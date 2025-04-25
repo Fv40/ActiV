@@ -9,6 +9,20 @@ const selectAllActivities = () => {
   return activityTable().select("*");
 };
 
+async function getAllActivities() {
+  const { data: activities, error } = await selectAllActivities().not(
+    "activity_description",
+    "ilike",
+    DELETED
+  );
+
+  if (error) {
+    throw error;
+  }
+
+  return activities;
+}
+
 async function getAllActivitiesForFriendGroup() {
   // TODO WEB-36: Get all users from friend group
   /*
@@ -94,6 +108,7 @@ async function deleteActivity(activity_id) {
 }
 
 module.exports = {
+  getAllActivities,
   getAllActivitiesForFriendGroup,
   getActivitiesForUser,
   createActivity,

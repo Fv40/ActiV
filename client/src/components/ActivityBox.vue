@@ -11,13 +11,16 @@ const props = defineProps<{
 const timeDifference = computed(() => {
   const now = new Date()
 
-  const activityDate = new Date(props.activity.date)
+  const activityDate = new Date(props.activity.activity_date)
   const diffInMs = now.getTime() - activityDate.getTime()
   const diffInMinutes = Math.floor(diffInMs / 60000)
   const diffInHours = Math.floor(diffInMinutes / 60)
   const diffInDays = Math.floor(diffInHours / 24)
+  const diffInYears = Math.floor(diffInDays / 365)
 
-  if (diffInDays > 0) {
+  if (diffInYears > 0) {
+    return `${diffInYears} year(s) ago`
+  } else if (diffInDays > 0) {
     return `${diffInDays} day(s) ago`
   } else if (diffInHours > 0) {
     return `${diffInHours} hour(s) ago`
@@ -31,7 +34,7 @@ const timeDifference = computed(() => {
   <div class="card activity-card">
     <div class="card-image">
       <figure class="image is-4by3">
-        <img v-bind:src="activity.imageSource" alt="Workout image" />
+        <img v-bind:src="activity.thumbnail_src" alt="Workout image" />
       </figure>
     </div>
     <div class="card-content">
@@ -46,10 +49,10 @@ const timeDifference = computed(() => {
         </div>
       </div>
 
-      <div class="content" style="margin-top: -30px; font-size: 20px">
-        {{ activity.title }}
+      <div class="content" style="margin-top: -20px; font-size: 20px">
+        {{ activity.activity_description }}
         <br />
-        <u>{{ activity.type }}</u>
+        <u>{{ activity.activity_type }}</u>
         <br />
         <time style="opacity: 70%">{{ timeDifference }}</time>
       </div>
@@ -61,5 +64,16 @@ const timeDifference = computed(() => {
 .activity-card {
   max-width: 600px;
   margin: 0 auto;
+}
+
+.activity-card .image.is-48x48 img {
+  object-fit: cover;
+  object-position: center;
+}
+
+.activity-card .image.is-48x48 img {
+  width: 48px;
+  height: 48px;
+  object-fit: fill; /* stretches the image to fill the square */
 }
 </style>

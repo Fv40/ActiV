@@ -9,22 +9,26 @@ let currentUser = session.refSession().value!.user
 const showModal = ref(false)
 
 const newActivity = ref<Activity>({
-  userId: currentUser!.user_id,
-  imageSource: 'https://picsum.photos/500/500',
-  title: 'My workout',
-  type: 'Cardio',
-  date: new Date(),
+  user_id: currentUser!.user_id,
+  thumbnail_src: 'https://picsum.photos/500/500',
+  activity_description: 'My workout',
+  activity_type: 'Cardio',
+  activity_date: new Date(),
 })
 
-let activities = getActivitiesForUser(currentUser!.user_id)
+const activities = ref<Activity[]>([])
+
+getActivitiesForUser(currentUser!.user_id).then((data) => {
+  activities.value = data
+})
 
 function openModal() {
   newActivity.value = {
-    userId: currentUser!.user_id,
-    imageSource: '',
-    title: 'My workout',
-    type: 'Cardio',
-    date: new Date(),
+    user_id: currentUser!.user_id,
+    thumbnail_src: '',
+    activity_description: 'My workout',
+    activity_type: 'Cardio',
+    activity_date: new Date(),
   }
 
   showModal.value = true
@@ -32,36 +36,34 @@ function openModal() {
 
 function saveActivity() {
   // Set default values if user has left them blank
-  newActivity.value.title =
-    newActivity.value.title || `My ${newActivity.value.type.toLocaleLowerCase()} workout`
-  newActivity.value.imageSource =
-    newActivity.value.imageSource ||
+  newActivity.value.activity_description =
+    newActivity.value.activity_description || `My ${newActivity.value.activity_type.toLocaleLowerCase()} workout`
+  newActivity.value.thumbnail_src =
+    newActivity.value.thumbnail_src ||
     'https://mir-s3-cdn-cf.behance.net/project_modules/fs/73674f80778075.5ceb8de9562bc.jpg'
 
   addActivity({ ...newActivity.value })
-  activities = getActivitiesForUser(currentUser!.user_id)
+  //activities = getActivitiesForUser(currentUser!.user_id)
   showModal.value = false
 }
 </script>
 
 <template>
   <div class="columns is-multiline mt-3">
-    <div
-      v-if="currentUser"
-      v-for="activity in activities"
-      :key="activity.title"
-      class="column is-full is-centered"
-    >
-      <ActivityBox :activity="activity" :user="currentUser" />
+    <div v-if="activities" v-for="activity in activities" :key="activity.activity_id" class="column is-full is-centered">
+      <ActivityBox :activity="activity" :user="currentUser!" />
+    </div>
+    <div v-else class="has-text-centered py-6">
+      <span class="icon is-large has-text-info">
+        <i class="fas fa-spinner fa-pulse fa-3x"></i>
+      </span>
+      <h1 class="title is-4 mt-4">Loading Activities...</h1>
     </div>
   </div>
 
   <div class="columns is-flex is-justify-content-space-between is-align-items-flex-end">
     <div class="column is-narrow">
-      <button
-        class="button is-warning is-light is-outlined is-rounded add-activity-button"
-        @click="openModal"
-      >
+      <button class="button is-warning is-light is-outlined is-rounded add-activity-button" @click="openModal">
         <span><i class="fa-solid fa-plus mr-2"></i></span>Add Activity
       </button>
     </div>
@@ -77,20 +79,20 @@ function saveActivity() {
         <div class="field">
           <label class="label">Image URL</label>
           <div class="control">
-            <input class="input" type="text" v-model="newActivity.imageSource" />
+            <input class="input" type="text" v-model="newActivity.thumbnail_src" />
           </div>
         </div>
         <div class="field">
           <label class="label">Title</label>
           <div class="control">
-            <input class="input" type="text" v-model="newActivity.title" />
+            <input class="input" type="text" v-model="newActivity.activity_description" />
           </div>
         </div>
         <div class="field">
           <label class="label">Type</label>
           <div class="control">
             <div class="select">
-              <select v-model="newActivity.type">
+              <select v-model="newActivity.activity_type">
                 <option>Cardio</option>
                 <option>Strength</option>
               </select>
