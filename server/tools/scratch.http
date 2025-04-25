@@ -31,7 +31,7 @@ DELETE http://localhost:8090/api/v1/users/18
 GET http://localhost:8090/api/v1/activities/friendgroups/1
 
 ### get activities for single user
-GET http://localhost:8090/api/v1/activities/1
+GET http://localhost:8090/api/v1/activities/22
 
 ### create activity
 POST http://localhost:8090/api/v1/activities/
