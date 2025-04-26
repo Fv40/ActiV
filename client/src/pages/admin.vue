@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import * as session from '@/models/connection/session'
+import { refSession } from '@/models/connection/session'
 import { ref } from 'vue'
 import { getUsers, deleteUser, updateUser } from '@/models/users'
 import type { User } from '@/models/users'
@@ -15,7 +15,7 @@ function updateUserList() {
 
 updateUserList()
 
-const currentUser = session.refSession().value!.user
+const currentUser = refSession().value!.user
 
 const showModal = ref(false)
 const selectedUser = ref<User>({ user_id: 0, profile_picture_source: '', username: '', email: '', isAdmin: false })

@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import * as session from '@/models/connection/session'
-import { getActivitiesForUser, addActivity } from '@/models/activity'
+import { getActivitiesForUser, addActivity, type Activity } from '@/models/activity'
 import ActivityBox from '@/components/ActivityBox.vue'
-import type { Activity } from '@/models/activity'
 
 let currentUser = session.refSession().value!.user
 const showModal = ref(false)
