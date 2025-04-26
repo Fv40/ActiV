@@ -1,4 +1,3 @@
-import { ref } from 'vue'
 import { api } from './connection/session'
 
 export interface User {
@@ -9,18 +8,20 @@ export interface User {
   isAdmin: boolean
 }
 
+const USER_ENDPOINT = '/users'
+
 export function getUsers(): Promise<User[]> {
-  return api<User[]>('get', '/users', {})
+  return api<User[]>('get', USER_ENDPOINT, {})
 }
 
 export function getUserById(id: number): Promise<User> {
-  return api<User>('get', `/users/${id}`, {})
+  return api<User>('get', `${USER_ENDPOINT}/${id}`, {})
 }
 
 export function updateUser(id: number, updateBody: object): Promise<User> {
-  return api<User>('put', `/users/${id}`, updateBody)
+  return api<User>('put', `${USER_ENDPOINT}/${id}`, updateBody)
 }
 
 export function deleteUser(id: number): Promise<User> {
-  return api<User>('delete', `/users/${id}`, {})
+  return api<User>('delete', `${USER_ENDPOINT}/${id}`, {})
 }
