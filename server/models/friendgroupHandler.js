@@ -35,7 +35,32 @@ async function getAllActivitiesForFriendGroup(group_id) {
   return activityHandler.getActivitiesForBulkUsers(users.group_members);
 }
 
+async function getFriendgroupsForUser(user_id) {
+  const { userTable } = require("./userHandler.js");
+
+  const { data: friendgroupids, errorUser } = await userTable()
+    .select("friendgroups")
+    .eq("user_id", user_id)
+    .not("username", "ilike", constants.DELETED)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  const { data: friendgroups, error: errorGroup } = await connection
+    .connect()
+    .from("friendgroups")
+    .select("*")
+    .in("group_id", friendgroupids);
+
+  if (fgError) throw errorGroup;
+
+  return friendgroups;
+}
+
 module.exports = {
   getFriendGroupById,
   getAllActivitiesForFriendGroup,
+  getFriendgroupsForUser,
 };
