@@ -64,6 +64,9 @@ function login(userId: number) {
             ><span class="icon"><i class="fa-solid fa-people-group"></i></span>Friends'
             Activity</RouterLink
           >
+          <RouterLink :to="generateRoute('friendgroups')" class="navbar-item pr-3"
+            ><span class="icon"><i class="fa-solid fa-address-book"></i></span>Friendgroups</RouterLink
+          >
           <RouterLink :to="generateRoute('statistics')" class="navbar-item pr-3"
             ><span class="icon"><i class="fa-solid fa-chart-area"></i></span>Statistics</RouterLink
           >

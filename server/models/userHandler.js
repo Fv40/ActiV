@@ -37,20 +37,6 @@ async function getUserById(id) {
   return user;
 }
 
-async function getFriendgroupsForUser(user_id) {
-  const { data: friendgroups, error } = await userTable()
-    .select("friendgroups")
-    .eq("user_id", user_id)
-    .not("username", "ilike", constants.DELETED)
-    .single();
-
-  if (error) {
-    throw error;
-  }
-
-  return friendgroups;
-}
-
 async function createUser(userToCreate) {
   const { data: newUser, error } = await userTable()
     .insert(userToCreate)
@@ -109,9 +95,9 @@ async function deleteUser(user_id) {
 }
 
 module.exports = {
+  userTable,
   getAllUsers,
   getUserById,
-  getFriendgroupsForUser,
   createUser,
   updateUser,
   deleteUser,
