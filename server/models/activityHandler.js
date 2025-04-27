@@ -24,7 +24,7 @@ async function getAllActivities() {
   return activities;
 }
 
-async function getActivitiesForUser(user_id, sort = 'date', order = 'desc') {
+async function getActivitiesForUser(user_id, sort = 'activity_date', order = 'desc') {
   const { data: activities, error } = await selectAllActivities()
     .eq("user_id", user_id)
     .not("activity_description", "ilike", constants.DELETED)

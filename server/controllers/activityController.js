@@ -14,7 +14,7 @@ router
     console.log('ids', ids);
 
     activityHandler
-      .getAllActivitiesForBulkFriendGroups(ids, order)
+      .getAllActivitiesForBulkFriendGroups(ids, sort, order)
       .then((data) => res.json(data))
       .catch((error) => res.status(500).json({ error: error.message }));
   })
