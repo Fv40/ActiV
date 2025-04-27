@@ -37,7 +37,7 @@ GET http://localhost:8090/api/v1/activities/22
 GET http://localhost:8090/api/v1/activities/friendgroups/1
 
 ### get all activities for multiple friendgroups
-GET http://localhost:8090/api/v1/activities/friendgroups?ids=1,2
+GET http://localhost:8090/api/v1/activities/friendgroups?ids=1
 
 ### create activity
 POST http://localhost:8090/api/v1/activities
