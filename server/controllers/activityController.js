@@ -2,7 +2,6 @@ const activityHandler = require("../models/activityHandler.js");
 const router = require("express").Router();
 
 router
-   // TODO: WEB-36 Remove this endpoint when friend groups are implemented?
   .get("/", (req, res) => {
     activityHandler
       .getAllActivities()

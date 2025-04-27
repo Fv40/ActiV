@@ -14,3 +14,7 @@ const FRIENDGROUP_ENDPOINT = '/friendgroups'
 export function getFriendgroupsForUser(user_id: number): Promise<Friendgroup[]> {
     return api<Friendgroup[]>('get', `${FRIENDGROUP_ENDPOINT}/user/${user_id}`, {})
 }
+
+export function removeUserFromFriendgroup(group_id: number, user_id: number): Promise<Friendgroup> {
+    return api<Friendgroup>('delete', `${FRIENDGROUP_ENDPOINT}/${group_id}/user/${user_id}`, {})
+}

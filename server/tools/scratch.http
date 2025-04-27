@@ -68,4 +68,7 @@ GET http://localhost:8090/api/v1/friendgroups/1
 GET http://localhost:8090/api/v1/friendgroups/1/activities
 
 ### get all friendgroups for user
-GET http://localhost:8090/api/v1/friendgroups/user/1
+GET http://localhost:8090/api/v1/friendgroups/user/2
+
+### remove user from friendgroup
+DELETE http://localhost:8090/api/v1/friendgroups/1/user/2

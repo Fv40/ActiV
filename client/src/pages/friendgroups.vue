@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { refSession } from '@/models/connection/session'
 import { ref } from 'vue'
-import { getFriendgroupsForUser, type Friendgroup } from '@/models/friendgroups'
+import { getFriendgroupsForUser, removeUserFromFriendgroup, type Friendgroup } from '@/models/friendgroups'
 
 const currentUser = refSession().value!.user
 const currentUserFriendGroups = ref<Friendgroup[]>([])
@@ -11,7 +11,11 @@ getFriendgroupsForUser(currentUser!.user_id).then((data) => {
 })
 
 function removeUserFromGroup(groupId: number) {
-    console.log(`Removing user from group with ID: ${groupId}`)
+    removeUserFromFriendgroup(currentUser!.user_id, groupId).then(() => {
+        getFriendgroupsForUser(currentUser!.user_id).then((data) => {
+            currentUserFriendGroups.value = data
+        })
+    })
 }
 </script>
 
@@ -34,7 +38,7 @@ function removeUserFromGroup(groupId: number) {
                     <td>
                         <div class="column">
                             <button class="button is-danger mr-2"
-                                @click="removeUserFromGroup(currentUser!.user_id)">
+                                @click="removeUserFromGroup(friendgroup.group_id)">
                                 <i class="fa-solid fa-right-from-bracket"></i>Leave Group
                             </button>
                         </div>
