@@ -11,7 +11,7 @@ getFriendgroupsForUser(currentUser!.user_id).then((data) => {
 })
 
 function removeUserFromGroup(groupId: number) {
-    removeUserFromFriendgroup(currentUser!.user_id, groupId).then(() => {
+    removeUserFromFriendgroup(groupId, currentUser!.user_id).then(() => {
         getFriendgroupsForUser(currentUser!.user_id).then((data) => {
             currentUserFriendGroups.value = data
         })

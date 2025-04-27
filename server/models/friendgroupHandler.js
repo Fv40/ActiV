@@ -109,9 +109,55 @@ async function removeUserFromFriendGroup(group_id, user_id) {
   return group;
 }
 
+async function addUserToFriendgroup(group_id, user_id) {
+  const { data: friendgroups, errorUserFriendgroups } = await userTable()
+    .select("friendgroups")
+    .eq("user_id", user_id)
+    .not("username", "ilike", constants.DELETED)
+    .single();
+
+  friendgroups.friendgroups.push(group_id);
+
+  const { data: user, errorUser } = await userTable()
+    .update({
+      friendgroups: friendgroups.friendgroups,
+    })
+    .eq("user_id", user_id)
+    .not("username", "ilike", constants.DELETED)
+    .select("*");
+
+  if (errorUser) {
+    throw errorUser;
+  }
+
+  const { data: friendgroupMembers, errorFriendgroupMembers } =
+    await friendGroupTable()
+      .select("group_members")
+      .eq("group_id", group_id)
+      .not("group_name", "ilike", constants.DELETED)
+      .single();
+
+  friendgroupMembers.group_members.push(user_id);
+
+  const { data: group, errorGroup } = await friendGroupTable()
+    .update({
+      group_members: friendgroupMembers.group_members,
+    })
+    .eq("group_id", group_id)
+    .not("group_name", "ilike", constants.DELETED)
+    .select("*");
+
+  if (errorGroup) {
+    throw errorGroup;
+  }
+
+  return group;
+}
+
 module.exports = {
   getFriendGroupById,
   getAllActivitiesForFriendGroup,
   getFriendgroupsForUser,
   removeUserFromFriendGroup,
+  addUserToFriendgroup
 };
