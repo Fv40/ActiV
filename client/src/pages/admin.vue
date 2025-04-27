@@ -18,7 +18,7 @@ updateUserList()
 const currentUser = refSession().value!.user
 
 const showModal = ref(false)
-const selectedUser = ref<User>({ user_id: 0, profile_picture_source: '', username: '', email: '', isAdmin: false })
+const selectedUser = ref<User>({ user_id: 0, profile_picture_source: '', username: '', email: '', isAdmin: false, friendgroups: [] })
 
 function removeUser(userId: number) {
   deleteUser(userId).then(() => {

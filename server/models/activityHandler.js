@@ -79,8 +79,6 @@ async function getAllActivitiesForBulkFriendGroups(groupIds) {
     throw error;
   }
 
-  console.log(allUserIds);
-
   return getActivitiesForBulkUsers(allUserIds);
 }
 
