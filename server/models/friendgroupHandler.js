@@ -1,6 +1,5 @@
 const connection = require("./connection.js");
 const constants = require("./constants.js");
-const activityHandler = require("./activityHandler.js");
 
 const TABLE = "friendgroups";
 
@@ -19,21 +18,6 @@ async function getFriendGroupById(group_id) {
   }
 
   return friendgroup;
-}
-
-async function getAllActivitiesForFriendGroup(group_id) {
-  console.log("Fetching activities for friend group with ID:", group_id);
-  const { data: users, error } = await friendGroupTable()
-    .select("group_members")
-    .eq("group_id", group_id)
-    .not("group_name", "ilike", constants.DELETED)
-    .single();
-
-  if (error) {
-    throw error;
-  }
-
-  return activityHandler.getActivitiesForBulkUsers(users.group_members);
 }
 
 async function getFriendgroupsForUser(user_id) {
@@ -155,8 +139,8 @@ async function addUserToFriendgroup(group_id, user_id) {
 }
 
 module.exports = {
+  friendGroupTable,
   getFriendGroupById,
-  getAllActivitiesForFriendGroup,
   getFriendgroupsForUser,
   removeUserFromFriendGroup,
   addUserToFriendgroup

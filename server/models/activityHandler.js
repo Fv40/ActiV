@@ -1,5 +1,6 @@
 const constants = require("./constants.js");
 const connection = require("./connection.js");
+const { friendGroupTable } = require("./friendgroupHandler.js");
 
 const TABLE = "activities";
 
@@ -45,6 +46,42 @@ async function getActivitiesForBulkUsers(user_ids) {
   }
 
   return activities;
+}
+
+async function getAllActivitiesForFriendGroup(group_id) {
+  const { data: users, error } = await friendGroupTable()
+    .select("group_members")
+    .eq("group_id", group_id)
+    .not("group_name", "ilike", constants.DELETED)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return getActivitiesForBulkUsers(users.group_members);
+}
+
+async function getAllActivitiesForBulkFriendGroups(groupIds) {
+  const friendgroupIds = groupIds.ids.split(",");
+
+  const { data: users, error } = await friendGroupTable()
+    .select("group_members")
+    .in("group_id", friendgroupIds)
+    .not("group_name", "ilike", constants.DELETED);
+
+  // Combine all returned group members into a single array
+  const allUserIds = users
+    .flatMap((group) => group.group_members)
+    .filter((id, idx, arr) => arr.indexOf(id) === idx);
+
+  if (error) {
+    throw error;
+  }
+
+  console.log(allUserIds);
+
+  return getActivitiesForBulkUsers(allUserIds);
 }
 
 async function createActivity(activityToCreate) {
@@ -104,6 +141,8 @@ module.exports = {
   getAllActivities,
   getActivitiesForUser,
   getActivitiesForBulkUsers,
+  getAllActivitiesForFriendGroup,
+  getAllActivitiesForBulkFriendGroups,
   createActivity,
   updateActivity,
   deleteActivity,
