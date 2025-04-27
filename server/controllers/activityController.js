@@ -9,26 +9,32 @@ router
       .catch((error) => res.status(500).json({ error: error.message }));
   })
   .get("/friendgroups", (req, res) => {
-    const groupIds = req.query;
+    console.log('req.query', req.query);
+    const { ids, sort, order } = req.query;
+    console.log('ids', ids);
 
     activityHandler
-      .getAllActivitiesForBulkFriendGroups(groupIds)
+      .getAllActivitiesForBulkFriendGroups(ids, sort, order)
       .then((data) => res.json(data))
       .catch((error) => res.status(500).json({ error: error.message }));
   })
   .get("/friendgroups/:group_id", (req, res) => {
+    const { sort, order } = req.query;
+
     const group_id = req.params.group_id;
 
     activityHandler
-      .getAllActivitiesForFriendGroup(group_id)
+      .getAllActivitiesForFriendGroup(group_id, sort, order)
       .then((data) => res.json(data))
       .catch((error) => res.status(500).json({ error: error.message }));
   })
   .get("/:user_id", (req, res) => {
+    const { sort, order } = req.query;
+
     const user_id = req.params.user_id;
 
     activityHandler
-      .getActivitiesForUser(user_id)
+      .getActivitiesForUser(user_id, sort, order)
       .then((data) => res.json(data))
       // TODO: WEB-28: Change this to use custom error handler
       .catch((error) => res.status(500).json({ error: error.message }));
