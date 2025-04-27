@@ -50,7 +50,6 @@ async function createUser(userToCreate) {
 }
 
 async function updateUser(user, user_id) {
-  console.log(user);
   const { data: updatedUser, error } = await userTable()
     .update(user)
     .eq("user_id", user_id)

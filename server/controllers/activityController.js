@@ -8,6 +8,22 @@ router
       .then((data) => res.json(data))
       .catch((error) => res.status(500).json({ error: error.message }));
   })
+  .get("/friendgroups", (req, res) => {
+    const groupIds = req.query;
+
+    activityHandler
+      .getAllActivitiesForBulkFriendGroups(groupIds)
+      .then((data) => res.json(data))
+      .catch((error) => res.status(500).json({ error: error.message }));
+  })
+  .get("/friendgroups/:group_id", (req, res) => {
+    const group_id = req.params.group_id;
+
+    activityHandler
+      .getAllActivitiesForFriendGroup(group_id)
+      .then((data) => res.json(data))
+      .catch((error) => res.status(500).json({ error: error.message }));
+  })
   .get("/:user_id", (req, res) => {
     const user_id = req.params.user_id;
 

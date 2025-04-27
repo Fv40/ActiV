@@ -10,14 +10,6 @@ router
       .then((data) => res.json(data))
       .catch((error) => res.status(500).json({ error: error.message }));
   })
-  .get("/:group_id/activities", (req, res) => {
-    const group_id = req.params.group_id;
-
-    friendgroupHandler
-      .getAllActivitiesForFriendGroup(group_id)
-      .then((data) => res.json(data))
-      .catch((error) => res.status(500).json({ error: error.message }));
-  })
   .get("/user/:user_id", (req, res) => {
     const user_id = req.params.user_id;
 
