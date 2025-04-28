@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { refSession } from '@/models/connection/session'
 import { getUsers, type User } from '@/models/users.ts'
 import { getActivities, getActivitiesForFriendgroup, getActivitiesForFriendgroups, type Activity } from '@/models/activity.ts'
@@ -46,6 +46,13 @@ getUsers().then((data) => {
 })
 
 const dropdownActive = ref(false)
+
+const showOwnActivity = ref(true)
+const filteredActivities = computed(() =>
+  showOwnActivity.value
+    ? activities.value
+    : activities.value.filter(a => a.user_id !== currentUser?.user_id)
+)
 </script>
 
 <template>
@@ -76,7 +83,13 @@ const dropdownActive = ref(false)
         </div>
       </div>
     </div>
-    <div v-if="currentUser" v-for="activity in activities" :key="activity.activity_description"
+    <div class="field ml-5 mt-2">
+      <label class="checkbox">
+        <input type="checkbox" v-model="showOwnActivity" />
+        Show my activity
+      </label>
+    </div>
+    <div v-if="currentUser" v-for="activity in filteredActivities" :key="activity.activity_description"
       class="column is-full is-centered">
       <ActivityBox :activity="activity" :user="users.find((user) => user.user_id === activity.user_id)!" />
     </div>
