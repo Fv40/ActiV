@@ -2,31 +2,26 @@
 import { defineProps, computed } from 'vue'
 import type { User } from '@/models/users'
 import type { Activity } from '@/models/activity'
+import dayjs from 'dayjs'
+import duration from 'dayjs/plugin/duration'
+import relativeTime from 'dayjs/plugin/relativeTime'
+
+dayjs.extend(relativeTime)
+dayjs.extend(duration)
 
 const props = defineProps<{
   activity: Activity
   user: User
 }>()
 
-const timeDifference = computed(() => {
-  const now = new Date()
-
-  const activityDate = new Date(props.activity.activity_date)
-  const diffInMs = now.getTime() - activityDate.getTime()
-  const diffInMinutes = Math.floor(diffInMs / 60000)
-  const diffInHours = Math.floor(diffInMinutes / 60)
-  const diffInDays = Math.floor(diffInHours / 24)
-  const diffInYears = Math.floor(diffInDays / 365)
-
-  if (diffInYears > 0) {
-    return `${diffInYears} year(s) ago`
-  } else if (diffInDays > 0) {
-    return `${diffInDays} day(s) ago`
-  } else if (diffInHours > 0) {
-    return `${diffInHours} hour(s) ago`
-  } else {
-    return `${diffInMinutes} minute(s) ago`
+const activityDuration = computed(() => {
+  const dur = dayjs.duration(props.activity.duration_m, 'minutes')
+  const hours = dur.hours()
+  const minutes = dur.minutes()
+  if (hours > 0) {
+    return `${hours}h ${minutes}m`
   }
+  return `${minutes}m`
 })
 </script>
 
@@ -53,9 +48,9 @@ const timeDifference = computed(() => {
         {{ activity.activity_description }}
         <br />
         <u>{{ activity.activity_type }}</u>
-        ({{ activity.duration_m }} minutes)
+          {{ activityDuration }}
         <br />
-        <time style="opacity: 70%">{{ timeDifference }}</time>
+        <time style="opacity: 70%">{{ dayjs(activity.activity_date).fromNow() }}</time>
       </div>
     </div>
   </div>
@@ -75,6 +70,7 @@ const timeDifference = computed(() => {
 .activity-card .image.is-48x48 img {
   width: 48px;
   height: 48px;
-  object-fit: fill; /* stretches the image to fill the square */
+  object-fit: fill;
+  /* stretches the image to fill the square */
 }
 </style>
