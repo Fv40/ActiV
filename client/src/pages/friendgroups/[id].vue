@@ -25,8 +25,10 @@ getFriendgroup(Number(groupId)).then((data) => {
 
 <template>
     <div>
-        <h1 class="title is-4 mt-4">Friendgroup: {{ currentFriendGroup?.group_name }}</h1>
-    
+        <img v-bind:src="currentFriendGroup?.group_picture_source"></img>
+        <h1 class="title is-4 mt-4 mb-6"><u>{{ currentFriendGroup?.group_name }}</u></h1>
+        <h1 class="title is-6 mb-6">{{ currentFriendGroup?.group_description }}</h1>
+        <h1 class="title is-6 mb-6">Group members: {{ currentFriendGroup?.group_members.length }}</h1>
     </div>
     <div>
         <div class="container" v-if="currentFriendGroup">
@@ -40,7 +42,7 @@ getFriendgroup(Number(groupId)).then((data) => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="user in groupMembers" :key="user.user_id">
+                    <tr v-if="groupMembers" v-for="user in groupMembers" :key="user.user_id">
                         <td><img class="image is-48x48" v-bind:src="user.profile_picture_source" /></td>
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
@@ -48,11 +50,17 @@ getFriendgroup(Number(groupId)).then((data) => {
                             <div class="column">
                                 <button class="button is-danger mr-2"
                                     @click="removeUserFromFriendgroup(currentFriendGroup!.group_id, user.user_id)">
-                                    <i class="fa-solid fa-right-from-bracket"></i>Leave Group
+                                    <i class="fa-solid fa-right-from-bracket mr-2"></i>Remove user from group
                                 </button>
                             </div>
                         </td>
                     </tr>
+                    <div v-else>
+                        <span class="icon is-large has-text-info">
+                            <i class="fas fa-spinner fa-pulse fa-3x"></i>
+                        </span>
+                        <h1 class="title is-4 mt-4">Loading members...</h1>
+                    </div>
                 </tbody>
             </table>
         </div>
@@ -66,5 +74,7 @@ getFriendgroup(Number(groupId)).then((data) => {
 </template>
 
 <style scoped>
-
+h1 {
+    text-align: center;
+}
 </style>

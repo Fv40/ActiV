@@ -20,7 +20,7 @@ export function getUserById(id: number): Promise<User> {
 }
 
 export function getBulkUsers(ids: number[]): Promise<User[]> {
-  return api<User[]>('get', `${USER_ENDPOINT}/bulk`, { ids })
+  return api<User[]>('get', `${USER_ENDPOINT}/bulk?ids=${ids}`, {})
 }
 
 export function updateUser(id: number, updateBody: object): Promise<User> {

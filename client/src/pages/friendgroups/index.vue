@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { refSession } from '@/models/connection/session'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { getFriendgroupsForUser, removeUserFromFriendgroup, type Friendgroup } from '@/models/friendgroups'
+
+const router = useRouter()
 
 const currentUser = refSession().value!.user
 const currentUserFriendGroups = ref<Friendgroup[]>([])
@@ -10,7 +13,7 @@ getFriendgroupsForUser(currentUser!.user_id).then((data) => {
     currentUserFriendGroups.value = data
 })
 
-// TODO WEB-49: Use vue.watch here
+// TODO WEB-49: Use vue.watch here?
 function removeUserFromGroup(groupId: number) {
     removeUserFromFriendgroup(groupId, currentUser!.user_id).then(() => {
         getFriendgroupsForUser(currentUser!.user_id).then((data) => {
@@ -27,7 +30,7 @@ function removeUserFromGroup(groupId: number) {
                 <tr>
                     <th></th>
                     <th>Group name</th>
-                    <th>Group members</th>
+                    <th>Total members</th>
                     <th></th>
                 </tr>
             </thead>
@@ -39,8 +42,8 @@ function removeUserFromGroup(groupId: number) {
                             <img class="image is-48x48" v-bind:src="friendgroup.group_picture_source" />
                         </RouterLink>
                     </td>
-                    <td class="">{{ friendgroup.group_name }}</td>
-                    <td>{{ friendgroup.group_members }}</td>
+                    <td>{{ friendgroup.group_name }}</td>
+                    <td class="members-count">{{ friendgroup.group_members.length }}</td>
                     <td>
                         <div class="column">
                             <button class="button is-danger mr-2" @click="removeUserFromGroup(friendgroup.group_id)">
@@ -85,11 +88,23 @@ function removeUserFromGroup(groupId: number) {
 }
 
 td {
+    padding-left: 0;
+}
+td:first-child,
+td:nth-child(2) {
     padding-left: 50px;
 }
 
 th {
     padding-left: 50px;
+}
+
+.members-count {
+    text-align: center;
+    vertical-align: middle;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 0px;
 }
 
 img {

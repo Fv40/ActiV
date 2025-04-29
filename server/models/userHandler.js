@@ -24,9 +24,16 @@ async function getAllUsers() {
   return users;
 }
 
-async function getBulkUsers(body) {
+async function getBulkUsers(ids) {
+  let userIds = [];
+  if (ids.includes(",")) {
+    userIds = ids.split(",");
+  } else {
+    userIds = [ids];
+  }
+
   const { data: users, error } = await selectAllUsers()
-    .in("user_id", body.ids)
+    .in("user_id", userIds)
     .not("username", "ilike", constants.DELETED);
 
   if (error) {
