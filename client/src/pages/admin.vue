@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { refSession } from '@/models/connection/session'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { getUsers, deleteUser, updateUser } from '@/models/users'
 import type { User } from '@/models/users'
 
@@ -16,6 +16,8 @@ function updateUserList() {
 updateUserList()
 
 const currentUser = refSession().value!.user
+
+const isSaveDisabled = computed(() => !selectedUser.value.username?.trim())
 
 const showModal = ref(false)
 const selectedUser = ref<User>({ user_id: 0, profile_picture_source: '', username: '', email: '', isAdmin: false, friendgroups: [] })
@@ -100,7 +102,7 @@ function saveUser() {
         </div>
       </section>
       <footer class="modal-card-foot">
-        <button class="button is-success" @click="saveUser()">Save</button>
+        <button class="button is-success" @click="saveUser()" :disabled="isSaveDisabled">Save</button>
         <button class="button" @click="showModal = false">Cancel</button>
       </footer>
     </div>
