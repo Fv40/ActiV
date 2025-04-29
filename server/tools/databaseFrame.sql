@@ -26,3 +26,11 @@ CREATE TABLE friendgroups (
     owner_id INT NOT NULL REFERENCES users(user_id),
     friendgroup_members INT[] DEFAULT '{}'
     );
+
+CREATE TABLE meals (
+    meal_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(user_id),
+    calories INT NOT NULL,
+    meal_time TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    description TEXT
+);
