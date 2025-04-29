@@ -24,11 +24,15 @@ async function getAllActivities() {
   return activities;
 }
 
-async function getActivitiesForUser(user_id, sort = 'activity_date', order = 'desc') {
+async function getActivitiesForUser(
+  user_id,
+  sort = "activity_date",
+  order = "desc"
+) {
   const { data: activities, error } = await selectAllActivities()
     .eq("user_id", user_id)
     .not("activity_description", "ilike", constants.DELETED)
-    .order(sort, { ascending: order === 'asc' });
+    .order(sort, { ascending: order === "asc" });
 
   if (error) {
     throw error;
@@ -37,11 +41,15 @@ async function getActivitiesForUser(user_id, sort = 'activity_date', order = 'de
   return activities;
 }
 
-async function getActivitiesForBulkUsers(user_ids, sort = 'activity_date', order = 'desc') {
+async function getActivitiesForBulkUsers(
+  user_ids,
+  sort = "activity_date",
+  order = "desc"
+) {
   const { data: activities, error } = await selectAllActivities()
     .in("user_id", user_ids)
     .not("activity_description", "ilike", constants.DELETED)
-    .order(sort, { ascending: order === 'asc' });
+    .order(sort, { ascending: order === "asc" });
 
   if (error) {
     throw error;
@@ -50,10 +58,14 @@ async function getActivitiesForBulkUsers(user_ids, sort = 'activity_date', order
   return activities;
 }
 
-async function getAllActivitiesForFriendGroup(group_id, sort = 'group_id', order = 'desc') {
+async function getAllActivitiesForFriendGroup(
+  group_id,
+  sort = "group_id",
+  order = "desc"
+) {
   const { data: users, error } = await friendGroupTable()
     .select("group_members")
-    .order(sort, { ascending: order === 'asc' })
+    .order(sort, { ascending: order === "asc" })
     .eq("group_id", group_id)
     .not("group_name", "ilike", constants.DELETED)
     .single();
@@ -65,8 +77,12 @@ async function getAllActivitiesForFriendGroup(group_id, sort = 'group_id', order
   return getActivitiesForBulkUsers(users.group_members);
 }
 
-async function getAllActivitiesForBulkFriendGroups(ids, sort = 'group_id', order = 'desc') {  
-  let freindgroupIds = [];
+async function getAllActivitiesForBulkFriendGroups(
+  ids,
+  sort = "group_id",
+  order = "desc"
+) {
+  let friendgroupIds = [];
   if (ids.includes(",")) {
     friendgroupIds = ids.split(",");
   } else {
@@ -77,11 +93,10 @@ async function getAllActivitiesForBulkFriendGroups(ids, sort = 'group_id', order
     .select("group_members")
     .in("group_id", friendgroupIds)
     .not("group_name", "ilike", constants.DELETED)
-    .order(sort, { ascending: order === 'asc' });
+    .order(sort, { ascending: order === "asc" });
 
-    console.log('users', users);
+  console.log("users", users);
 
-  // Combine all returned group members into a single array
   const allUserIds = users
     .flatMap((group) => group.group_members)
     .filter((id, idx, arr) => arr.indexOf(id) === idx);

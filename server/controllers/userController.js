@@ -8,6 +8,15 @@ router
             // TODO: WEB-28: Change this to use custom error handler
             .catch((error) => res.status(500).json({ error: error.message }));
     })
+    .get("/bulk", (req, res) => {
+        const { ids } = req.query;
+
+        console.log("req.query id", ids);
+
+        userHandler.getBulkUsers(ids)
+            .then((data) => res.json(data))
+            .catch((error) => res.status(500).json({ error: error.message }));
+    })
     .get("/:id", (req, res) => {
         const id = req.params.id;
 

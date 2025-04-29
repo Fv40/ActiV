@@ -9,9 +9,7 @@ router
       .catch((error) => res.status(500).json({ error: error.message }));
   })
   .get("/friendgroups", (req, res) => {
-    console.log('req.query', req.query);
     const { ids, sort, order } = req.query;
-    console.log('ids', ids);
 
     activityHandler
       .getAllActivitiesForBulkFriendGroups(ids, sort, order)

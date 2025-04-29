@@ -8,6 +8,9 @@ GET http://localhost:8090/api/v1/users/1
 ### get all of a user's friendgroups
 GET http://localhost:8090/api/v1/users/1/friendgroups
 
+### get bulk users
+GET http://localhost:8090/api/v1/users/bulk?ids=1,2,3
+
 ### create user
 POST http://localhost:8090/api/v1/users
 Content-Type: application/json
