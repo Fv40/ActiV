@@ -21,6 +21,25 @@ function removeUserFromGroup(groupId: number) {
         })
     })
 }
+
+const showDeleteModal = ref(false)
+const groupToDelete = ref<Friendgroup | null>(null)
+
+function confirmDeleteGroup(friendgroup: Friendgroup) {
+    groupToDelete.value = friendgroup
+    showDeleteModal.value = true
+}
+
+function handleDeleteConfirmed() {
+    if (groupToDelete.value) {
+        // TODO: add functuonality for deleting friendgroup
+    }
+}
+
+function handleDeleteCancelled() {
+    showDeleteModal.value = false
+    groupToDelete.value = null
+}
 </script>
 
 <template>
@@ -45,15 +64,37 @@ function removeUserFromGroup(groupId: number) {
                     <td>{{ friendgroup.group_name }}</td>
                     <td class="members-count">{{ friendgroup.group_members.length }}</td>
                     <td>
-                        <div class="column">
-                            <button class="button is-danger mr-2" @click="removeUserFromGroup(friendgroup.group_id)">
-                                <i class="fa-solid fa-right-from-bracket"></i>Leave Group
+                        <div class="column" v-if="currentUser?.user_id != friendgroup.owner_id">
+                            <button class="button is-danger ml-6" @click="removeUserFromGroup(friendgroup.group_id)">
+                                Leave Group<i class="fa-solid fa-right-from-bracket ml-2"></i>
+                            </button>
+                        </div>
+                        <div v-else>
+                            <button class="button is-danger ml-6" @click="confirmDeleteGroup(friendgroup)">
+                                Delete Group<i class="fa-solid fa-trash ml-2"></i>
                             </button>
                         </div>
                     </td>
                 </tr>
             </tbody>
         </table>
+
+        <div class="modal" :class="{ 'is-active': showDeleteModal }">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Confirm Delete</p>
+                    <button class="delete" aria-label="close" @click="handleDeleteCancelled"></button>
+                </header>
+                <section class="modal-card-body">
+                    <p>Are you sure you want to delete the group <strong>{{ groupToDelete?.group_name }}</strong>?</p>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-danger" @click="handleDeleteConfirmed">Delete</button>
+                    <button class="button ml-2" @click="handleDeleteCancelled">Cancel</button>
+                </footer>
+            </div>
+        </div>
     </div>
 </template>
 

@@ -47,10 +47,10 @@ getFriendgroup(Number(groupId)).then((data) => {
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
                         <td>
-                            <div class="column">
+                            <div class="column" v-if="(currentUser?.isAdmin || currentUser?.user_id === currentFriendGroup?.owner_id) && currentUser?.user_id !== user.user_id">
                                 <button class="button is-danger mr-2"
                                     @click="removeUserFromFriendgroup(currentFriendGroup!.group_id, user.user_id)">
-                                    <i class="fa-solid fa-right-from-bracket mr-2"></i>Remove user from group
+                                    Remove user from group<i class="fa-solid fa-user-minus ml-2"></i>
                                 </button>
                             </div>
                         </td>
