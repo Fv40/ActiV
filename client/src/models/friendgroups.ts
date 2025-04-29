@@ -11,6 +11,10 @@ export type Friendgroup = {
 
 const FRIENDGROUP_ENDPOINT = '/friendgroups'
 
+export function getFriendgroup(group_id: number): Promise<Friendgroup> {
+    return api<Friendgroup>('get', `${FRIENDGROUP_ENDPOINT}/${group_id}`, {})
+}
+
 export function getFriendgroupsForUser(user_id: number): Promise<Friendgroup[]> {
     return api<Friendgroup[]>('get', `${FRIENDGROUP_ENDPOINT}/user/${user_id}`, {})
 }
