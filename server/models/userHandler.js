@@ -24,6 +24,18 @@ async function getAllUsers() {
   return users;
 }
 
+async function getBulkUsers(body) {
+  const { data: users, error } = await selectAllUsers()
+    .in("user_id", body.ids)
+    .not("username", "ilike", constants.DELETED);
+
+  if (error) {
+    throw error;
+  }
+
+  return users;
+}
+
 async function getUserById(id) {
   const { data: user, error } = await selectAllUsers()
     .eq("user_id", id)
@@ -97,6 +109,7 @@ module.exports = {
   userTable,
   getAllUsers,
   getUserById,
+  getBulkUsers,
   createUser,
   updateUser,
   deleteUser,
