@@ -1,16 +1,19 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { refSession } from '@/models/connection/session'
-import { getUserStats } from '@/models/userStats'
+import { getUserStats, type UserStatOverTime } from '@/models/userStats'
 
 let currentSession = refSession()
 let currentUser = currentSession.value.user
 
-const userWorkoutStats = currentUser ? getUserStats().value.get(currentUser.user_id) : null
+const userWorkoutStats = ref<UserStatOverTime[]>([]);
+getUserStats(currentUser!.user_id).then((data) => {
+  userWorkoutStats.value = data
+})
 
 function formatTime(minutes: number) {
   const hours = Math.floor(minutes / 60)
   const remainingMinutes = minutes % 60
-
   return `${hours}h: ${remainingMinutes}m`
 }
 </script>
@@ -27,9 +30,9 @@ function formatTime(minutes: number) {
             <div class="columns is-mobile is-centered">
               <div class="column has-text-centered">
                 <p class="entry-title">
-                  <u>Distance<br />Walked</u>
+                  <u>Activities<br />Completed</u>
                 </p>
-                <p class="entry">{{ item.userStats.distanceWalked }} mi</p>
+                <p class="entry">{{ item.userStats.activitiesCompleted }}</p>
               </div>
               <div class="column has-text-centered">
                 <p class="entry-title">

@@ -1,13 +1,14 @@
-import { ref } from 'vue'
+import { getMealsForUser } from './meals'
+import { getActivitiesForUser } from './activity'
 
 export const TODAY = 'Today'
 export const THIS_WEEK = 'This Week'
 export const ALL_TIME = 'All Time'
 
 interface UserStats {
-  distanceWalked: number
   timeWorkedOut: number
   caloriesConsumed: number
+  activitiesCompleted: number
 }
 
 export interface UserStatOverTime {
@@ -15,60 +16,80 @@ export interface UserStatOverTime {
   userStats: UserStats
 }
 
-let userStatMap = new Map<number, UserStatOverTime[]>()
-
-userStatMap.set(1, [
-  { timePeriod: TODAY, userStats: { distanceWalked: 5, timeWorkedOut: 30, caloriesConsumed: 900 } },
-  {
-    timePeriod: THIS_WEEK,
-    userStats: { distanceWalked: 35, timeWorkedOut: 210, caloriesConsumed: 1400 },
-  },
-  {
-    timePeriod: ALL_TIME,
-    userStats: { distanceWalked: 150, timeWorkedOut: 900, caloriesConsumed: 5000 },
-  },
-])
-
-userStatMap.set(2, [
-  { timePeriod: TODAY, userStats: { distanceWalked: 3, timeWorkedOut: 20, caloriesConsumed: 950 } },
-  {
-    timePeriod: THIS_WEEK,
-    userStats: { distanceWalked: 21, timeWorkedOut: 140, caloriesConsumed: 1250 },
-  },
-  {
-    timePeriod: ALL_TIME,
-    userStats: { distanceWalked: 90, timeWorkedOut: 600, caloriesConsumed: 4500 },
-  },
-])
-
-userStatMap.set(3, [
-  { timePeriod: TODAY, userStats: { distanceWalked: 4, timeWorkedOut: 25, caloriesConsumed: 180 } },
-  {
-    timePeriod: THIS_WEEK,
-    userStats: { distanceWalked: 55, timeWorkedOut: 175, caloriesConsumed: 1260 },
-  },
-  {
-    timePeriod: ALL_TIME,
-    userStats: { distanceWalked: 70, timeWorkedOut: 750, caloriesConsumed: 5400 },
-  },
-])
-
-userStatMap.set(4, [
-  { timePeriod: TODAY, userStats: { distanceWalked: 6, timeWorkedOut: 35, caloriesConsumed: 220 } },
-  {
-    timePeriod: THIS_WEEK,
-    userStats: { distanceWalked: 42, timeWorkedOut: 245, caloriesConsumed: 1540 },
-  },
-  {
-    timePeriod: ALL_TIME,
-    userStats: { distanceWalked: 180, timeWorkedOut: 1050, caloriesConsumed: 6600 },
-  },
-])
-
-const userStats = ref(userStatMap)
-
-export function getUserStats() {
-  return userStats
+function getDateString(date: Date) {
+  return date.toISOString().slice(0, 10)
 }
 
-export { userStatMap }
+function getWeekStart(date: Date) {
+  const d = new Date(date)
+  d.setDate(d.getDate() - d.getDay())
+  return getDateString(d)
+}
+
+function getWeekEnd(date: Date) {
+  const d = new Date(date)
+  d.setDate(d.getDate() + (6 - d.getDay()))
+  return getDateString(d)
+}
+
+export async function getUserStats(userId: number): Promise<UserStatOverTime[]> {
+  const today = new Date()
+  const todayStr = getDateString(today)
+  const weekStart = getWeekStart(today)
+  const weekEnd = getWeekEnd(today)
+
+  const [mealsToday, mealsAll, activitiesAll] = await Promise.all([
+    getMealsForUser(userId, todayStr),
+    getMealsForUser(userId),
+    getActivitiesForUser(userId), 
+  ])
+
+  // Activities
+  const activitiesTodayArr = activitiesAll.filter(activity => {
+    const date = getDateString(new Date(activity.activity_date))
+    return date === todayStr
+  })
+  
+  const activitiesWeekArr = activitiesAll.filter(activity => {
+    const date = getDateString(new Date(activity.activity_date))
+    return date >= weekStart && date <= weekEnd
+  })
+
+  // Calories
+  const caloriesToday = mealsToday.reduce((sum, m) => sum + m.calories, 0)
+  const caloriesWeek = mealsAll
+    .filter((m) => m.meal_time && m.meal_time >= weekStart && m.meal_time <= weekEnd)
+    .reduce((sum, m) => sum + m.calories, 0)
+  const caloriesAll = mealsAll.reduce((sum, m) => sum + m.calories, 0)
+
+  const timeToday = activitiesTodayArr.reduce((sum, a) => sum + (a.duration_m || 0), 0)
+  const timeWeek = activitiesWeekArr.reduce((sum, a) => sum + (a.duration_m || 0), 0)
+  const timeAll = activitiesAll.reduce((sum, a) => sum + (a.duration_m || 0), 0)
+
+  return [
+    {
+      timePeriod: TODAY,
+      userStats: {
+        timeWorkedOut: timeToday,
+        caloriesConsumed: caloriesToday,
+        activitiesCompleted: activitiesTodayArr.length,
+      },
+    },
+    {
+      timePeriod: THIS_WEEK,
+      userStats: {
+        timeWorkedOut: timeWeek,
+        caloriesConsumed: caloriesWeek,
+        activitiesCompleted: activitiesWeekArr.length,
+      },
+    },
+    {
+      timePeriod: ALL_TIME,
+      userStats: {
+        timeWorkedOut: timeAll,
+        caloriesConsumed: caloriesAll,
+        activitiesCompleted: activitiesAll.length,
+      },
+    },
+  ]
+}
