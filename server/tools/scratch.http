@@ -117,3 +117,19 @@ GET http://localhost:8090/api/v1/meals/user/1/calories?date=2025-04-29
 
 ### Get total calories for a user in a date range
 GET http://localhost:8090/api/v1/meals/user/1/calories?startDate=2025-04-01&endDate=2025-04-29
+
+# NOTIFICATION CONTROLLER
+### Get all invites for a user
+GET http://localhost:8090/api/v1/notifications/1
+
+### Create a new invite
+POST http://localhost:8090/api/v1/notifications
+Content-Type: application/json
+
+{
+  "group_id": 2,
+  "user_id": 1
+}
+
+### Mark an invite as read
+PATCH http://localhost:8090/api/v1/notifications/5/read

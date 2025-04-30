@@ -3,6 +3,8 @@ const express = require('express')
 const userController = require('./controllers/userController')
 const activityController = require("./controllers/activityController")
 const friendgroupController = require("./controllers/friendgroupController")
+const mealController = require("./controllers/mealController")
+const notificationController = require("./controllers/notificationController")
 
 require('dotenv').config()
 
@@ -26,10 +28,13 @@ app.use((req, res, next) => {
 app.use("/", express.static("dist"))
 
 // Controllers
-app.use("/api/v1/users", userController)
-app.use("/api/v1/activities", activityController)
-app.use("/api/v1/friendgroups", friendgroupController)
-app.use("/api/v1/meals", require("./controllers/mealController"))
+app
+.use("/api/v1/users", userController)
+.use("/api/v1/activities", activityController)
+.use("/api/v1/friendgroups", friendgroupController)
+.use("/api/v1/meals", mealController)
+.use("/api/v1/notifications", notificationController)
+
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`)

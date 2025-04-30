@@ -34,3 +34,11 @@ CREATE TABLE meals (
     meal_time TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     description TEXT NOT NULL
 );
+
+CREATE TABLE friendgroupInvities (
+    invite_id SERIAL PRIMARY KEY,
+    group_id INT NOT NULL REFERENCES friendgroups(group_id),
+    user_id INT NOT NULL REFERENCES users(user_id),
+    invite_date TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    is_read BOOLEAN DEFAULT FALSE
+);
