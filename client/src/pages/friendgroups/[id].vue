@@ -3,7 +3,7 @@ import { refSession } from '@/models/connection/session'
 import { getBulkUsers, type User } from '@/models/users'
 import { getFriendgroup, removeUserFromFriendgroup, type Friendgroup } from '@/models/friendgroups'
 import { useRoute } from 'vue-router'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 const route = useRoute('/friendgroups/[id]')
 
@@ -21,11 +21,19 @@ getFriendgroup(Number(groupId)).then((data) => {
         groupMembers.value = data
     })
 })
+
+function removeUserFromgroup(groupId: number, userId: number) {
+    removeUserFromFriendgroup(groupId, userId).then(() => {
+        groupMembers.value = groupMembers.value.filter((user) => user.user_id !== userId)
+    })
+}
 </script>
 
 <template>
     <div>
-        <img v-bind:src="currentFriendGroup?.group_picture_source"></img>
+        <div style="text-align: center;" >
+            <img v-bind:src="currentFriendGroup?.group_picture_source"></img>
+        </div>
         <h1 class="title is-4 mt-4 mb-6"><u>{{ currentFriendGroup?.group_name }}</u></h1>
         <h1 class="title is-6 mb-6">{{ currentFriendGroup?.group_description }}</h1>
         <h1 class="title is-6 mb-6">Group members: {{ currentFriendGroup?.group_members.length }}</h1>
@@ -49,7 +57,7 @@ getFriendgroup(Number(groupId)).then((data) => {
                         <td>
                             <div class="column" v-if="(currentUser?.isAdmin || currentUser?.user_id === currentFriendGroup?.owner_id) && currentUser?.user_id !== user.user_id">
                                 <button class="button is-danger mr-2"
-                                    @click="removeUserFromFriendgroup(currentFriendGroup!.group_id, user.user_id)">
+                                    @click="removeUserFromgroup(currentFriendGroup!.group_id, user.user_id)">
                                     Remove user from group<i class="fa-solid fa-user-minus ml-2"></i>
                                 </button>
                             </div>
