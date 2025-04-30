@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { refSession } from '@/models/connection/session'
-import { getBulkUsers, type User } from '@/models/users.ts'
+import { getUsers, type User } from '@/models/users.ts'
 import { getActivitiesForFriendgroup, getActivitiesForFriendgroups, type Activity } from '@/models/activity.ts'
 import { type Friendgroup, getFriendgroupsForUser } from '@/models/friendgroups'
 import ActivityBox from '@/components/ActivityBox.vue'
@@ -11,6 +11,10 @@ const currentUser = refSession().value.user
 const friendgroups = ref<Friendgroup[]>([])
 const activities = ref<Activity[]>([])
 const users = ref<User[]>([])
+
+getUsers().then((data) => {
+  users.value = data
+})
 
 getFriendgroupsForUser(refSession().value.user!.user_id).then((data) => {
   friendgroups.value = data

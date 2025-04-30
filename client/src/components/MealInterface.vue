@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { getMealsForUser, addMeal, type Meal } from '@/models/meals'
 import { refSession } from '@/models/connection/session'
+import dayjs from 'dayjs'
 
 let currentUser = refSession().value.user
 
@@ -45,15 +46,19 @@ onMounted(fetchMeals)
                 <tr>
                     <th>Name</th>
                     <th>Calories</th>
+                    <th>Date</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="meal in meals" :key="meal.meal_id">
                     <td>{{ meal.description }}</td>
                     <td>{{ meal.calories }} cal</td>
+                    <td>
+                        {{ meal.meal_time ? dayjs(meal.meal_time).format('MMM D, h:mm A') : '' }}
+                    </td>
                 </tr>
                 <tr v-if="meals.length === 0">
-                    <td colspan="2" class="has-text-centered has-text-grey-light">No meals logged yet.</td>
+                    <td colspan="3" class="has-text-centered has-text-grey-light">No meals logged yet.</td>
                 </tr>
             </tbody>
         </table>

@@ -41,7 +41,7 @@ function removeUserFromgroup(groupId: number, userId: number) {
         </div>
         <h1 class="title is-4 mt-4 mb-6"><u>{{ currentFriendGroup?.group_name }}</u></h1>
         <h1 class="title is-6 mb-6">{{ currentFriendGroup?.group_description }}</h1>
-        <h1 class="title is-6 mb-6">Group members: {{ currentFriendGroup?.group_members.length + 1}}</h1>
+        <h1 class="title is-6 mb-6">Group members: {{ currentFriendGroup!.group_members.length + 1}}</h1>
     </div>
 
     <div class="card owner-card mb-5">
