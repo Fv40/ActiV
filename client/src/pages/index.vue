@@ -3,11 +3,10 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import InfoBox from '@/components/InfoBox.vue'
 import NotificationList from '@/components/NotificationList.vue'
+import MealInterface from '@/components/MealInterface.vue'
 import * as session from '@/models/connection/session'
 
 const router = useRouter()
-
-let currentUser = ref(session.refSession().value.user)
 </script>
 
 <template>
@@ -21,6 +20,7 @@ let currentUser = ref(session.refSession().value.user)
         <div class="column is-half">
           <h1 class="column-title">Notifications</h1>
           <NotificationList />
+          <MealInterface />
         </div>
       </div>
     </div>

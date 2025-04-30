@@ -32,5 +32,5 @@ CREATE TABLE meals (
     user_id INT NOT NULL REFERENCES users(user_id),
     calories INT NOT NULL,
     meal_time TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    description TEXT
+    description TEXT NOT NULL
 );
