@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { refSession } from '@/models/connection/session'
-import { getUsers, type User } from '@/models/users.ts'
-import { getActivities, getActivitiesForFriendgroup, getActivitiesForFriendgroups, type Activity } from '@/models/activity.ts'
+import { getBulkUsers, type User } from '@/models/users.ts'
+import { getActivitiesForFriendgroup, getActivitiesForFriendgroups, type Activity } from '@/models/activity.ts'
 import { type Friendgroup, getFriendgroupsForUser } from '@/models/friendgroups'
 import ActivityBox from '@/components/ActivityBox.vue'
 import CalorieInfo from '@/components/CalorieInfo.vue'
@@ -10,6 +10,7 @@ import CalorieInfo from '@/components/CalorieInfo.vue'
 const currentUser = refSession().value.user
 const friendgroups = ref<Friendgroup[]>([])
 const activities = ref<Activity[]>([])
+const users = ref<User[]>([])
 
 getFriendgroupsForUser(refSession().value.user!.user_id).then((data) => {
   friendgroups.value = data
@@ -39,11 +40,6 @@ function generateFilterText(newFilterGroupId: number) {
 
 getActivitiesForFriendgroups(currentUser!.friendgroups).then((data) => {
   activities.value = data
-})
-
-const users = ref<User[]>([])
-getUsers().then((data) => {
-  users.value = data
 })
 
 const dropdownActive = ref(false)
