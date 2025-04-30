@@ -124,7 +124,8 @@ const displayedUsers = computed(() => {
           </div>
         </div>
         <div class="column is-one-third calorie-col">
-          <div v-for="user in displayedUsers" :key="user.user_id" class="mb-6 mr-6" style="width: 100%; max-width: 320px;">
+          <div v-for="user in displayedUsers" :key="user.user_id" class="mb-6 mr-6"
+            style="width: 100%; max-width: 320px;">
             <CalorieInfo :user="user" />
           </div>
         </div>
