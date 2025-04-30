@@ -78,3 +78,42 @@ DELETE http://localhost:8090/api/v1/friendgroups/1/user/2
 
 ### add user to friendgroup
 POST http://localhost:8090/api/v1/friendgroups/1/user/2
+
+# MEAL CONTROLLER
+### Create a new meal
+POST http://localhost:8090/api/v1/meals
+Content-Type: application/json
+
+{
+  "user_id": 1,
+  "calories": 500,
+  "meal_time": "2025-04-29T12:00:00Z",
+  "description": "Lunch - Chicken salad"
+}
+
+### Get all meals for a user
+GET http://localhost:8090/api/v1/meals/user/1
+
+### Get all meals for a user on a specific date
+GET http://localhost:8090/api/v1/meals/user/1?date=2025-04-29
+
+### Get a single meal by ID
+GET http://localhost:8090/api/v1/meals/1
+
+### Update a meal
+PUT http://localhost:8090/api/v1/meals/1
+Content-Type: application/json
+
+{
+  "calories": 600,
+  "description": "Lunch - Chicken salad with extra avocado"
+}
+
+### Delete a meal
+DELETE http://localhost:8090/api/v1/meals/1
+
+### Get total calories for a user on a specific date
+GET http://localhost:8090/api/v1/meals/user/1/calories?date=2025-04-29
+
+### Get total calories for a user in a date range
+GET http://localhost:8090/api/v1/meals/user/1/calories?startDate=2025-04-01&endDate=2025-04-29
