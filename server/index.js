@@ -29,6 +29,7 @@ app.use("/", express.static("dist"))
 app.use("/api/v1/users", userController)
 app.use("/api/v1/activities", activityController)
 app.use("/api/v1/friendgroups", friendgroupController)
+app.use("/api/v1/meals", require("./controllers/mealController"))
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`)
