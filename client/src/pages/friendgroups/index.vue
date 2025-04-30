@@ -13,7 +13,6 @@ getFriendgroupsForUser(currentUser!.user_id).then((data) => {
     currentUserFriendGroups.value = data
 })
 
-// TODO WEB-49: Use vue.watch here?
 function removeUserFromGroup(groupId: number) {
     removeUserFromFriendgroup(groupId, currentUser!.user_id).then(() => {
         getFriendgroupsForUser(currentUser!.user_id).then((data) => {
@@ -62,7 +61,7 @@ function handleDeleteCancelled() {
                         </RouterLink>
                     </td>
                     <td>{{ friendgroup.group_name }}</td>
-                    <td class="members-count">{{ friendgroup.group_members.length }}</td>
+                    <td class="members-count">{{ friendgroup.group_members.length + 1}}</td>
                     <td>
                         <div class="column" v-if="currentUser?.user_id != friendgroup.owner_id">
                             <button class="button is-danger ml-6" @click="removeUserFromGroup(friendgroup.group_id)">
