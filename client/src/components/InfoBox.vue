@@ -2,6 +2,10 @@
 import { ref } from 'vue'
 import { refSession } from '@/models/connection/session'
 import { getUserStats, type UserStatOverTime } from '@/models/userStats'
+import dayjs from 'dayjs'
+import duration from 'dayjs/plugin/duration'
+
+dayjs.extend(duration)
 
 let currentSession = refSession()
 let currentUser = currentSession.value.user
@@ -12,9 +16,10 @@ getUserStats(currentUser!.user_id).then((data) => {
 })
 
 function formatTime(minutes: number) {
-  const hours = Math.floor(minutes / 60)
-  const remainingMinutes = minutes % 60
-  return `${hours}h: ${remainingMinutes}m`
+  const dur = dayjs.duration(minutes, 'minutes')
+  return dur.hours() > 0
+    ? `${dur.hours()}h ${dur.minutes()}m`
+    : `${dur.minutes()}m`
 }
 </script>
 
