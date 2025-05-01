@@ -30,7 +30,7 @@ async function createInvite(group_id, user_id) {
       group_id,
       user_id,
       is_read: false,
-      invite_date: new Date().toISOString()
+      invite_date: new Date().toISOString(),
     })
     .select("*")
     .single();
@@ -39,9 +39,21 @@ async function createInvite(group_id, user_id) {
   return newInvite;
 }
 
+async function hasUnreadInvite(group_id, user_id) {
+  const { data: invites, error } = await inviteTable()
+    .select("*")
+    .eq("group_id", group_id)
+    .eq("user_id", user_id)
+    .eq("is_read", false);
+
+  if (error) throw error;
+  return invites && invites.length > 0;
+}
+
 module.exports = {
   inviteTable,
   getInvitesForUser,
   setRead,
   createInvite,
+  hasUnreadInvite,
 };
