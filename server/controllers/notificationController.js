@@ -26,7 +26,7 @@ router
       res.status(500).json({ error: error.message });
     }
   })
-  .patch("/:invite_id/read", (req, res) => {
+  .put("/:invite_id/read", (req, res) => {
     notificationHandler
       .setRead(req.params.invite_id)
       .then((data) => res.json(data))

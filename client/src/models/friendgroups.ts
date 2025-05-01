@@ -22,3 +22,7 @@ export function getFriendgroupsForUser(user_id: number): Promise<Friendgroup[]> 
 export function removeUserFromFriendgroup(group_id: number, user_id: number): Promise<Friendgroup> {
     return api<Friendgroup>('delete', `${FRIENDGROUP_ENDPOINT}/${group_id}/user/${user_id}`, {})
 }
+
+export function addUserToFriendgroup(group_id: number, user_id: number): Promise<Friendgroup> {
+    return api<Friendgroup>('post', `${FRIENDGROUP_ENDPOINT}/${group_id}/user/${user_id}`, {})
+}

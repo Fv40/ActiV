@@ -19,5 +19,5 @@ export function createInvite(group_id: number, user_id: number): Promise<Invite>
 }
 
 export function setInviteRead(invite_id: number): Promise<Invite> {
-  return api('patch', `${NOTIFICATION_ENDPOINT}/${invite_id}/read`, {})
+  return api('put', `${NOTIFICATION_ENDPOINT}/${invite_id}/read`, {})
 }

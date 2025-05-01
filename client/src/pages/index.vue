@@ -7,10 +7,11 @@ import MealInterface from '@/components/MealInterface.vue'
 import * as session from '@/models/connection/session'
 
 const router = useRouter()
+const currentUser = session.refSession().value?.user
 </script>
 
 <template>
-  <div v-if="session.refSession().value.user" class="home">
+  <div v-if="currentUser" class="home">
     <div class="container">
       <div class="columns is-centered is-paddingless">
         <div class="column is-half">
@@ -19,7 +20,9 @@ const router = useRouter()
         </div>
         <div class="column is-half">
           <h1 class="column-title">Notifications</h1>
-          <NotificationList />
+          <NotificationList :user-id="currentUser.user_id"/>
+
+          <h1 class="column-title">Meals</h1>
           <MealInterface />
         </div>
       </div>
