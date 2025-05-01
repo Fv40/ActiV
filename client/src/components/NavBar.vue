@@ -70,10 +70,6 @@ function login(userId: number) {
           <RouterLink :to="generateRoute('statistics')" class="navbar-item pr-3"
             ><span class="icon"><i class="fa-solid fa-chart-area"></i></span>Statistics</RouterLink
           >
-          <RouterLink to="/" class="navbar-item pr-3"
-            ><span class="icon"><i class="fa-solid fa-magnifying-glass"></i></span>Search for
-            Friends</RouterLink
-          >
         </div>
 
         <div class="navbar-end">
