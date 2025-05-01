@@ -7,6 +7,7 @@ async function getInvitesForUser(user_id) {
   const { data: invites, error } = await inviteTable()
     .select("*")
     .eq("user_id", user_id)
+    .eq("is_read", false)
     .order("invite_date", { ascending: false });
 
   if (error) throw error;
