@@ -56,6 +56,19 @@ async function getUserById(id) {
   return user;
 }
 
+async function searchUsers(query) {
+  const { data: users, error } = await userTable()
+    .select("*")
+    .ilike("username", `%${query}%`)
+    .not("username", "ilike", constants.DELETED);
+
+  if (error) {
+    throw error;
+  }
+
+  return users;
+}
+
 async function createUser(userToCreate) {
   const { data: newUser, error } = await userTable()
     .insert(userToCreate)
@@ -116,6 +129,7 @@ module.exports = {
   userTable,
   getAllUsers,
   getUserById,
+  searchUsers,
   getBulkUsers,
   createUser,
   updateUser,

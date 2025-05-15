@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { refSession } from '@/models/connection/session'
-import { getBulkUsers, getUserById, getUsers, type User } from '@/models/users'
+import { searchUsers, getBulkUsers, getUserById, getUsers, type User } from '@/models/users'
 import { getFriendgroup, removeUserFromFriendgroup, type Friendgroup } from '@/models/friendgroups'
 import { getInvitesForUser, createInvite } from '@/models/notifications'
 import { useRoute } from 'vue-router'
 import { ref, computed, onMounted, watch } from 'vue'
+import Vue3SimpleTypeahead from 'vue3-simple-typeahead'
 
 const route = useRoute('/friendgroups/[id]')
 
@@ -21,6 +22,8 @@ const inviteUserId = ref<number | null>(null)
 const inviteError = ref<string | null>(null)
 const allUsers = ref<User[]>([])
 const invites = ref<any[]>([])
+const searchQuery = ref('')
+const suggestions = ref<User[]>([])
 
 getFriendgroup(Number(groupId)).then((friendgroup) => {
     currentFriendGroup.value = friendgroup
@@ -68,6 +71,36 @@ function removeUserFromgroup(groupId: number, userId: number) {
     })
 }
 
+const itemProjectionFunction = (item: User) => item.username
+
+const fetchSuggestions = async (query: string) => {
+    if (!query) {
+        suggestions.value = []
+        return
+    }
+    try {
+        const data = await searchUsers(query)
+        suggestions.value = data
+    } catch (error) {
+        console.error('Error fetching suggestions:', error)
+    }
+}
+
+const filteredSuggestions = computed(() => {
+    const memberIds = new Set([
+        ...(currentFriendGroup.value?.group_members || []),
+        currentFriendGroup.value?.owner_id,
+    ])
+    return suggestions.value.filter(
+        (user) => !memberIds.has(user.user_id) && !invites.value.some((invite) => invite.user_id === user.user_id)
+    )
+})
+
+const selectItemEventHandler = (selectedItem: User) => {
+    inviteUserId.value = selectedItem.user_id // Set the selected user's ID
+    searchQuery.value = selectedItem.username // Update the input field with the selected user's name
+}
+
 async function handleInvite() {
     inviteError.value = null
     if (!inviteUserId.value) {
@@ -76,11 +109,10 @@ async function handleInvite() {
     }
     try {
         await createInvite(Number(groupId), inviteUserId.value)
-        await fetchInvites()
         showInviteModal.value = false
         inviteUserId.value = null
-    } catch (e: any) {
-        inviteError.value = e?.response?.data?.error || "Failed to send invite."
+    } catch (error) {
+        inviteError.value = "Failed to send invite."
     }
 }
 </script>
@@ -113,92 +145,94 @@ async function handleInvite() {
         </div>
     </div>
     <div>
-        <div v-if="currentUser?.user_id === currentFriendGroup?.owner_id" class="mb-4" style="text-align:center;">
-            <button class="button is-link" @click="showInviteModal = true">
-                Invite User to Group
-            </button>
-        </div>
+        <div>
+            <div v-if="currentUser?.user_id === currentFriendGroup?.owner_id" class="mb-4" style="text-align:center;">
+                <button class="button is-link" @click="showInviteModal = true">
+                    Invite User to Group
+                </button>
+            </div>
 
-        <div class="modal" :class="{ 'is-active': showInviteModal }">
-            <div class="modal-background" @click="showInviteModal = false"></div>
-            <div class="modal-card">
-                <header class="modal-card-head">
-                    <p class="modal-card-title">Invite User</p>
-                    <button class="delete" aria-label="close" @click="showInviteModal = false"></button>
-                </header>
-                <section class="modal-card-body">
-                    <div class="field">
-                        <label class="label">Select User</label>
-                        <div class="control">
-                            <div class="select is-fullwidth" style="display: flex; align-items: center;">
-                                <select v-model.number="inviteUserId">
-                                    <option :value="null" disabled>Select a user</option>
-                                    <option v-for="user in nonMembers" :key="user.user_id" :value="user.user_id">
-                                        {{ user.username }} ({{ user.email }})
-                                    </option>
-                                </select>
-                            </div>
+            <div class="modal" :class="{ 'is-active': showInviteModal }">
+                <div class="modal-background" @click="showInviteModal = false"></div>
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <p class="modal-card-title">Invite User</p>
+                        <button class="delete" aria-label="close" @click="showInviteModal = false"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        <div class="field">
+                            <label class="label">Search User</label>
+                            <p class="help">Start typing a name and click on a suggestion to select a user.</p>
+                            <vue3-simple-typeahead id="typeahead_id" placeholder="Start typing..."
+                                :items="filteredSuggestions" :minInputLength="1" v-model="searchQuery"
+                                :itemProjection="itemProjectionFunction" @selectItem="selectItemEventHandler"
+                                @onInput="() => fetchSuggestions(searchQuery)" />
                             <div v-if="inviteUserId" class="mt-2" style="display: flex; align-items: center;">
-                                <img v-if="nonMembers.find(u => u.user_id === inviteUserId)?.profile_picture_source"
-                                    :src="nonMembers.find(u => u.user_id === inviteUserId)?.profile_picture_source"
+                                <img v-if="suggestions.find(u => u.user_id === inviteUserId)?.profile_picture_source"
+                                    :src="suggestions.find(u => u.user_id === inviteUserId)?.profile_picture_source"
                                     alt="Profile" class="image is-32x32 mr-2"
                                     style="border-radius: 50%; object-fit: cover;" />
                                 <span>
                                     {{
-                                        nonMembers.find(u => u.user_id === inviteUserId)?.username
+                                        suggestions.find(u => u.user_id === inviteUserId)?.username
                                     }}
                                 </span>
                             </div>
                         </div>
-                    </div>
-                    <p v-if="inviteError" class="has-text-danger">{{ inviteError }}</p>
-                </section>
-                <footer class="modal-card-foot">
-                    <button class="button is-success" @click="handleInvite">Send Invite</button>
-                    <button class="button" @click="showInviteModal = false">Cancel</button>
-                </footer>
+                        <p v-if="inviteError" class="has-text-danger">{{ inviteError }}</p>
+                    </section>
+                    <footer class="modal-card-foot">
+                        <button class="button is-success" @click="handleInvite">Send Invite</button>
+                        <button class="button" @click="showInviteModal = false">Cancel</button>
+                    </footer>
+                </div>
             </div>
+            <p v-if="inviteError" class="has-text-danger">{{ inviteError }}</p>
+            <footer class="modal-card-foot">
+                <button class="button is-success" @click="handleInvite">Send Invite</button>
+                <button class="button" @click="showInviteModal = false">Cancel</button>
+            </footer>
         </div>
-        <div class="container" v-if="currentFriendGroup">
-            <table class="table is-fullwidth">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-if="groupMembers" v-for="user in groupMembers" :key="user.user_id">
-                        <td><img class="image is-48x48" v-bind:src="user.profile_picture_source" /></td>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>
-                            <div class="column"
-                                v-if="(currentUser?.isAdmin || currentUser?.user_id === currentFriendGroup?.owner_id) && currentUser?.user_id !== user.user_id">
-                                <button class="button is-danger mr-2"
-                                    @click="removeUserFromgroup(currentFriendGroup!.group_id, user.user_id)">
-                                    Remove user from group<i class="fa-solid fa-user-minus ml-2"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <div v-else>
-                        <span class="icon is-large has-text-info">
-                            <i class="fas fa-spinner fa-pulse fa-3x"></i>
-                        </span>
-                        <h1 class="title is-4 mt-4">Loading members...</h1>
-                    </div>
-                </tbody>
-            </table>
-        </div>
-        <div v-else class="has-text-centered py-6">
-            <span class="icon is-large has-text-info">
-                <i class="fas fa-spinner fa-pulse fa-3x"></i>
-            </span>
-            <h1 class="title is-4 mt-4">Loading Friendgroup...</h1>
-        </div>
+    </div>
+    <div class="container" v-if="currentFriendGroup">
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-if="groupMembers" v-for="user in groupMembers" :key="user.user_id">
+                    <td><img class="image is-48x48" v-bind:src="user.profile_picture_source" /></td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        <div class="column"
+                            v-if="(currentUser?.isAdmin || currentUser?.user_id === currentFriendGroup?.owner_id) && currentUser?.user_id !== user.user_id">
+                            <button class="button is-danger mr-2"
+                                @click="removeUserFromgroup(currentFriendGroup!.group_id, user.user_id)">
+                                Remove user from group<i class="fa-solid fa-user-minus ml-2"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <div v-else>
+                    <span class="icon is-large has-text-info">
+                        <i class="fas fa-spinner fa-pulse fa-3x"></i>
+                    </span>
+                    <h1 class="title is-4 mt-4">Loading members...</h1>
+                </div>
+            </tbody>
+        </table>
+    </div>
+    <div v-else class="has-text-centered py-6">
+        <span class="icon is-large has-text-info">
+            <i class="fas fa-spinner fa-pulse fa-3x"></i>
+        </span>
+        <h1 class="title is-4 mt-4">Loading Friendgroup...</h1>
     </div>
 </template>
 

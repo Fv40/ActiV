@@ -30,3 +30,7 @@ export function updateUser(id: number, updateBody: object): Promise<User> {
 export function deleteUser(id: number): Promise<User> {
   return api<User>('delete', `${USER_ENDPOINT}/${id}`, {})
 }
+
+export function searchUsers(query: string): Promise<User[]> {
+  return api<User[]>('get', `${USER_ENDPOINT}/search?query=${query}`, {})
+}

@@ -8,6 +8,17 @@ router
             // TODO: WEB-28: Change this to use custom error handler
             .catch((error) => res.status(500).json({ error: error.message }));
     })
+    .get("/search", (req, res) => {
+        const { query } = req.query;
+    
+        if (!query) {
+            return res.status(400).json({ error: "A query string is required" });
+        }
+    
+        userHandler.searchUsers(query)
+            .then((data) => res.json(data))
+            .catch((error) => res.status(500).json({ error: error.message }));
+    })
     .get("/bulk", (req, res) => {
         const { ids } = req.query;
 
