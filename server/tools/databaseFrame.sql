@@ -12,10 +12,10 @@ CREATE TABLE activities (
     activity_id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(user_id),
     activity_type VARCHAR(50) NOT NULL,
-    activity_date TIMESTAMPZ DEFAULT CURRENT_TIMESTAMP,
+    activity_date timestamp DEFAULT CURRENT_TIMESTAMP,
     thumbnail_src TEXT,
     activity_description TEXT,
-    duration_m INT(2)
+    duration_m int
     );
 
 CREATE TABLE friendgroups (
